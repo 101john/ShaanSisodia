@@ -186,6 +186,26 @@ button:hover::before {
   transition: background-position 1.5s cubic-bezier(.68,-0.55,.27,1.55);
 }
 
+/* Slow, alive gradient effect */
+.hero-gradient-text-alive {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% 100%;
+  background-position: 0% 0%;
+  animation: hero-gradient-alive 8s linear infinite;
+}
+
+.hero-gradient-animate-alive {
+  animation-play-state: running;
+}
+
+@keyframes hero-gradient-alive {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
 /* Glowing MOVES effect in hero section */
 .hero-moves-gradient {
   background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
@@ -206,6 +226,67 @@ button:hover::before {
 @keyframes moves-gradient-pulse {
   0%, 100% { filter: brightness(1) drop-shadow(0 0 8px var(--accent-primary)); }
   50% { filter: brightness(1.2) drop-shadow(0 0 24px var(--accent-secondary)); }
+}
+
+/* Precise, bi-color gradient animation for hero text */
+.hero-gradient-text-precise {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 400% 100%;
+  background-position: 0% 0%;
+  animation: hero-gradient-precise 18s linear infinite;
+}
+
+.hero-gradient-animate-precise {
+  animation-play-state: running;
+}
+
+@keyframes hero-gradient-precise {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
+.hero-moves-gradient-precise {
+  background: linear-gradient(90deg, #F72585, #00ADB5, #F72585);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 400% 100%;
+  background-position: 0% 0%;
+  animation: hero-moves-gradient-precise 8s linear infinite;
+}
+
+@keyframes hero-moves-gradient-precise {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
+.hero-gradient-static {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 100% 100%;
+  background-position: 0% 0%;
+}
+
+.hero-moves-gradient-seamless {
+  background: linear-gradient(90deg, #F72585 0%, #00ADB5 25%, #F72585 50%, #00ADB5 75%, #F72585 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  animation: hero-moves-gradient-seamless 6s linear infinite;
+}
+
+@keyframes hero-moves-gradient-seamless {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
 }
 
 :root {
