@@ -153,6 +153,66 @@ button:hover::before {
   left: 100%;
 }
 
+/* Typewriter cursor animation */
+.typewriter-cursor {
+  display: inline-block;
+  animation: blink-cursor 1s steps(2, start) infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Optional: Enhance splash overlay for MOVES */
+.splash-effect {
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Animated gradient text for hero section */
+.hero-gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  transition: background-position 1.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.hero-gradient-animate {
+  background-position: 100% 0% !important;
+  transition: background-position 1.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* Glowing MOVES effect in hero section */
+.hero-moves-gradient {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: moves-gradient-animate 2.5s linear infinite, moves-gradient-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes moves-gradient-animate {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
+@keyframes moves-gradient-pulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 8px var(--accent-primary)); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 24px var(--accent-secondary)); }
+}
+
+:root {
+  --accent-primary: #00ADB5;
+  --accent-secondary: #F72585;
+}
+
 /* Responsive typography */
 @media (max-width: 768px) {
   body {
