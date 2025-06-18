@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X } from 'lucide-react';
 import Particles from './Particles';
@@ -16,6 +16,18 @@ interface Project {
 
 const ProjectsSection: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [selectedProject]);
 
   const projects: Project[] = [
     {
@@ -280,7 +292,7 @@ const ProjectsSection: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-dark-bg/95 backdrop-blur-xl z-[9999] flex items-center justify-center p-8"
+              className="fixed inset-0 bg-dark-bg/95 backdrop-blur-2xl z-[9999] flex items-center justify-center p-8"
               onClick={() => setSelectedProject(null)}
             >
               <motion.div
