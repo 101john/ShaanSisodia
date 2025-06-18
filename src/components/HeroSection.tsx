@@ -46,14 +46,14 @@ const HeroSection: React.FC = () => {
       setTimeout(() => {
         setShowMoves(true);
         setPhase('typing-moves');
-      }, 700);
+      }, 1000);
     } else if (phase === 'typing-moves') {
       let i = 0;
       const typeMoves = () => {
         if (i < moves.length) {
           setMovesTyped(moves.slice(0, i + 1));
           i++;
-          setTimeout(typeMoves, 45);
+          setTimeout(typeMoves, 75);
         } else {
           setPhase('wait-cursor');
           setTimeout(() => setPhase('show-rest'), 500);
