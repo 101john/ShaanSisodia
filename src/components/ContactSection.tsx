@@ -625,7 +625,7 @@ const ContactSection: React.FC = () => {
 
                 {/* Command Input */}
                 <div className="flex items-center gap-2">
-                  <span className="text-accent-primary">></span>
+                  <span className="text-accent-primary"></span>
                   <input
                     type="text"
                     value={currentCommand}
