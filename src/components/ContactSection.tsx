@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Github, Linkedin, Terminal, Send } from 'lucide-react';
+import { Mail, Github, Linkedin, Terminal, Send, X } from 'lucide-react';
 
 const ContactSection: React.FC = () => {
   const [terminalText, setTerminalText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
   const [messageStatus, setMessageStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [showTerminalModal, setShowTerminalModal] = useState(false);
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [currentCommand, setCurrentCommand] = useState('');
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [terminalOutput, setTerminalOutput] = useState<Array<{type: 'command' | 'output' | 'error', text: string}>>([
+    { type: 'output', text: 'Terminal initialized. Type "help" for available commands.' }
+  ]);
   
   const fullText = 'send_message("hey, let\'s build something.")';
 
@@ -33,6 +40,157 @@ const ContactSection: React.FC = () => {
       clearInterval(timer);
       clearInterval(cursorTimer);
     };
+  }, []);
+
+  // Terminal command handling
+  const executeCommand = (cmd: string) => {
+    const command = cmd.trim().toLowerCase();
+    setTerminalHistory(prev => [...prev, cmd]);
+    setHistoryIndex(-1);
+    
+    // Add command to output
+    setTerminalOutput(prev => [...prev, { type: 'command', text: `> ${cmd}` }]);
+    
+    switch (command) {
+      case 'help':
+        setTerminalOutput(prev => [...prev, 
+          { type: 'output', text: 'Available commands:' },
+          { type: 'output', text: '- contact    → scroll to contact form' },
+          { type: 'output', text: '- projects   → navigate to projects' },
+          { type: 'output', text: '- about      → show identity statement' },
+          { type: 'output', text: '- tech       → view tech arsenal' },
+          { type: 'output', text: '- ls         → list directory contents' },
+          { type: 'output', text: '- clear      → clear terminal' },
+          { type: 'output', text: '- sudo       → try elevated access' },
+          { type: 'output', text: '- cat        → read files' }
+        ]);
+        break;
+        
+      case 'contact':
+        setTerminalOutput(prev => [...prev, { type: 'output', text: 'Scrolling to contact section...' }]);
+        setTimeout(() => {
+          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+          setShowTerminalModal(false);
+        }, 500);
+        break;
+        
+      case 'projects':
+        setTerminalOutput(prev => [...prev, { type: 'output', text: 'Navigating to projects...' }]);
+        setTimeout(() => {
+          document.getElementById('works')?.scrollIntoView({ behavior: 'smooth' });
+          setShowTerminalModal(false);
+        }, 500);
+        break;
+        
+      case 'about':
+        setTerminalOutput(prev => [...prev, 
+          { type: 'output', text: 'IDENTITY_STATEMENT:' },
+          { type: 'output', text: '"I build systems, not screens."' },
+          { type: 'output', text: '"Every interface should breathe."' },
+          { type: 'output', text: '"Function without soul is noise."' }
+        ]);
+        break;
+        
+      case 'tech':
+        setTerminalOutput(prev => [...prev, { type: 'output', text: 'Navigating to tech arsenal...' }]);
+        setTimeout(() => {
+          document.getElementById('tech')?.scrollIntoView({ behavior: 'smooth' });
+          setShowTerminalModal(false);
+        }, 500);
+        break;
+        
+      case 'ls':
+        setTerminalOutput(prev => [...prev,
+          { type: 'output', text: '/home/shaan/' },
+          { type: 'output', text: '  ├── projects/' },
+          { type: 'output', text: '  ├── thoughts.md' },
+          { type: 'output', text: '  ├── obsessions.txt' },
+          { type: 'output', text: '  └── secrets.sh' }
+        ]);
+        break;
+        
+      case 'sudo':
+        setTerminalOutput(prev => [...prev, { type: 'error', text: 'permission denied: you\'re not root here' }]);
+        break;
+        
+      case 'cat secrets.sh':
+        setTerminalOutput(prev => [...prev,
+          { type: 'output', text: '#!/bin/bash' },
+          { type: 'output', text: 'echo "there are no secrets, only deeper layers."' }
+        ]);
+        break;
+        
+      case 'cat thoughts.md':
+        setTerminalOutput(prev => [...prev,
+          { type: 'output', text: '# Random Thoughts' },
+          { type: 'output', text: '- Code is poetry in motion' },
+          { type: 'output', text: '- Every pixel has purpose' },
+          { type: 'output', text: '- Minimalism is the ultimate sophistication' }
+        ]);
+        break;
+        
+      case 'cat obsessions.txt':
+        setTerminalOutput(prev => [...prev,
+          { type: 'output', text: 'Current obsessions:' },
+          { type: 'output', text: '→ WebGL shaders' },
+          { type: 'output', text: '→ Micro-interactions' },
+          { type: 'output', text: '→ System architecture' },
+          { type: 'output', text: '→ Perfect typography' }
+        ]);
+        break;
+        
+      case 'clear':
+        setTerminalOutput([]);
+        break;
+        
+      default:
+        setTerminalOutput(prev => [...prev, { type: 'error', text: `command not found: ${cmd}. Type "help" for available commands.` }]);
+    }
+    
+    setCurrentCommand('');
+  };
+
+  const handleTerminalKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      executeCommand(currentCommand);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (terminalHistory.length > 0) {
+        const newIndex = historyIndex === -1 ? terminalHistory.length - 1 : Math.max(0, historyIndex - 1);
+        setHistoryIndex(newIndex);
+        setCurrentCommand(terminalHistory[newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex !== -1) {
+        const newIndex = historyIndex + 1;
+        if (newIndex >= terminalHistory.length) {
+          setHistoryIndex(-1);
+          setCurrentCommand('');
+        } else {
+          setHistoryIndex(newIndex);
+          setCurrentCommand(terminalHistory[newIndex]);
+        }
+      }
+    } else if (e.key === 'Escape') {
+      setShowTerminalModal(false);
+    }
+  };
+
+  // Global keyboard shortcut
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowTerminalModal(true);
+      } else if (e.key === '/') {
+        e.preventDefault();
+        setShowTerminalModal(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
   const handleSendMessage = () => {
@@ -196,6 +354,29 @@ const ContactSection: React.FC = () => {
                 );
               })}
             </div>
+
+            {/* Terminal Access Button */}
+            <motion.button
+              onClick={() => setShowTerminalModal(true)}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full p-4 bg-dark-surface/40 border border-accent-primary/20 rounded-xl text-accent-primary font-mono text-sm hover:bg-accent-primary/10 hover:border-accent-primary/40 transition-all duration-300 magnetic relative overflow-hidden group"
+            >
+              <div className="flex items-center justify-center gap-3">
+                <Terminal className="w-4 h-4" />
+                <span>Open Terminal</span>
+                <span className="text-xs opacity-60">(Cmd+K)</span>
+              </div>
+              
+              {/* Button glow effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 opacity-0 group-hover:opacity-100"
+                transition={{ duration: 0.3 }}
+              />
+            </motion.button>
           </motion.div>
 
           {/* Enhanced Terminal */}
@@ -244,12 +425,12 @@ const ContactSection: React.FC = () => {
                 <div className="mb-6">
                   <span className="text-accent-primary">shaan@portfolio</span>
                   <span className="text-text-secondary">:</span>
-                  <span className="text-blue-400"></span>
-                  <span className="text-text-secondary"> </span>
+                  <span className="text-blue-400">~</span>
+                  <span className="text-text-secondary">$ </span>
                 </div>
                 
                 <div className="mb-8 relative">
-                  <span className="text-accent-primary"> </span>
+                  <span className="text-accent-primary">$ </span>
                   <span className="text-text-primary">
                     {terminalText}
                     {(showCursor || isTyping) && (
@@ -258,7 +439,7 @@ const ContactSection: React.FC = () => {
                         animate={{ opacity: showCursor ? [1, 0] : 1 }}
                         transition={{ duration: 0.8, repeat: showCursor ? Infinity : 0 }}
                       >
-                        
+                        |
                       </motion.span>
                     )}
                   </span>
@@ -379,9 +560,99 @@ const ContactSection: React.FC = () => {
             >
               // Building the future, one line at a time
             </motion.span>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
+
+      {/* Enhanced Terminal Modal */}
+      <AnimatePresence>
+        {showTerminalModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-dark-bg/95 backdrop-blur-2xl z-[9999] flex items-center justify-center p-8"
+            onClick={() => setShowTerminalModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 50 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative max-w-4xl w-full bg-dark-surface/95 backdrop-blur-sm border border-accent-primary/20 rounded-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Terminal Header */}
+              <div className="flex items-center justify-between px-6 py-4 bg-dark-bg/80 border-b border-dark-border">
+                <div className="flex items-center gap-4">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-accent-primary" />
+                    <span className="text-sm font-mono text-text-secondary">Terminal</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowTerminalModal(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-dark-surface/50 transition-colors"
+                >
+                  <X className="w-4 h-4 text-text-secondary" />
+                </button>
+              </div>
+
+              {/* Terminal Content */}
+              <div className="p-6 font-mono text-sm max-h-96 overflow-y-auto">
+                {/* Terminal Output */}
+                <div className="space-y-1 mb-4">
+                  {terminalOutput.map((line, index) => (
+                    <div
+                      key={index}
+                      className={`${
+                        line.type === 'command' 
+                          ? 'text-accent-primary' 
+                          : line.type === 'error' 
+                          ? 'text-red-400' 
+                          : 'text-text-secondary'
+                      }`}
+                    >
+                      {line.text}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Command Input */}
+                <div className="flex items-center gap-2">
+                  <span className="text-accent-primary">></span>
+                  <input
+                    type="text"
+                    value={currentCommand}
+                    onChange={(e) => setCurrentCommand(e.target.value)}
+                    onKeyDown={handleTerminalKeyDown}
+                    className="flex-1 bg-transparent border-none outline-none text-text-primary font-mono"
+                    placeholder="Type a command..."
+                    autoFocus
+                  />
+                  <motion.span
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                    className="text-accent-primary"
+                  >
+                    |
+                  </motion.span>
+                </div>
+
+                {/* Help hint */}
+                <div className="mt-4 text-xs text-text-muted">
+                  Press <kbd className="px-1 py-0.5 bg-dark-surface rounded text-accent-primary">↑</kbd> / <kbd className="px-1 py-0.5 bg-dark-surface rounded text-accent-primary">↓</kbd> for history, <kbd className="px-1 py-0.5 bg-dark-surface rounded text-accent-primary">Esc</kbd> to close
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
