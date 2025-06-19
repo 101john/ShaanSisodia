@@ -15,6 +15,7 @@ const HeroSection: React.FC = () => {
 
   useEffect(() => {
     const sequence = async () => {
+      // Boot sequence
       await new Promise(resolve => setTimeout(resolve, 800));
       setBootSequence(1);
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -30,19 +31,30 @@ const HeroSection: React.FC = () => {
   // Typewriter effect for 'CRAFTING CODE THAT', pause, then type 'MOVES' faster, then show rest
   useEffect(() => {
     if (!showContent) return;
-    if (phase === 'typing-main') {
-      let i = 0;
-      const type = () => {
-        if (i < beforeMoves.length) {
-          setDisplayed(beforeMoves.slice(0, i + 1));
-          i++;
-          setTimeout(type, 80);
-        } else {
-          setPhase('pause');
-        }
-      };
-      type();
-    } else if (phase === 'pause') {
+
+    const startTyping = async () => {
+      // Start typing main text immediately after boot sequence
+      if (phase === 'typing-main') {
+        let i = 0;
+        const type = () => {
+          if (i < beforeMoves.length) {
+            setDisplayed(beforeMoves.slice(0, i + 1));
+            i++;
+            setTimeout(type, 80);
+          } else {
+            setPhase('pause');
+          }
+        };
+        type();
+      }
+    };
+
+    startTyping();
+  }, [showContent, phase]);
+
+  // Handle subsequent phases
+  useEffect(() => {
+    if (phase === 'pause') {
       setTimeout(() => {
         setShowMoves(true);
         setPhase('typing-moves');
@@ -63,7 +75,7 @@ const HeroSection: React.FC = () => {
     } else if (phase === 'show-rest') {
       setShowRest(true);
     }
-  }, [showContent, phase]);
+  }, [phase]);
 
   const bootMessages = [
     'SYSTEM ONLINE.',
@@ -76,11 +88,11 @@ const HeroSection: React.FC = () => {
       {/* Boot Sequence */}
       {!showContent && (
         <motion.div 
-          className="fixed inset-0 flex items-center justify-center bg-dark-bg z-20"
+          className="fixed inset-0 flex items-center justify-center bg-black z-20"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="font-mono text-accent-primary text-sm tracking-wider">
+          <div className="font-mono text-cyan-500 text-sm tracking-wider">
             {bootMessages.slice(0, bootSequence).map((message, index) => (
               <motion.div
                 key={index}
@@ -92,7 +104,7 @@ const HeroSection: React.FC = () => {
                 <span className="relative">
                   {message}
                   <motion.div
-                    className="absolute -inset-1 bg-accent-primary/10 blur-sm"
+                    className="absolute -inset-1 bg-cyan-500/10 blur-sm"
                     animate={{ opacity: [0, 0.5, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
@@ -103,7 +115,7 @@ const HeroSection: React.FC = () => {
               <motion.span
                 animate={{ opacity: [1, 0] }}
                 transition={{ duration: 0.8, repeat: Infinity }}
-                className="inline-block ml-2 text-accent-primary"
+                className="inline-block ml-2 text-cyan-500"
               >
                 █
               </motion.span>
@@ -117,7 +129,7 @@ const HeroSection: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          transition={{ duration: 1 }}
           className="text-center px-8 max-w-7xl mx-auto relative z-10"
         >
           <div className="mb-12">
@@ -137,7 +149,7 @@ const HeroSection: React.FC = () => {
               {showMoves && (
                 <span className="relative inline-block ml-2 hero-moves-gradient-seamless">{movesTyped}</span>
               )}
-              <span className="typewriter-cursor text-accent-primary">{phase !== 'show-rest' && '|'}</span>
+              <span className="typewriter-cursor text-cyan-500">{phase !== 'show-rest' && '|'}</span>
             </h1>
           </div>
           {showRest && (
@@ -151,13 +163,13 @@ const HeroSection: React.FC = () => {
                 <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-16 font-light tracking-wide leading-relaxed">
                   Systems engineer. Visual architect. Code craftsman from the UK.
                   <br />
-                  <span className="text-accent-primary font-medium">Building digital experiences that breathe.</span>
+                  <span className="text-cyan-500 font-medium">Building digital experiences that breathe.</span>
                 </p>
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 1, delay: 0.4 }}
-                  className="w-24 h-0.5 bg-gradient-to-r from-accent-primary to-accent-secondary mx-auto"
+                  className="w-24 h-0.5 bg-gradient-to-r from-cyan-500 to-[#F72585] mx-auto"
                 />
               </motion.div>
               {/* Floating Elements */}
@@ -165,7 +177,7 @@ const HeroSection: React.FC = () => {
                 {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-1 h-1 bg-accent-primary/30 rounded-full"
+                    className="absolute w-1 h-1 bg-cyan-500/30 rounded-full"
                     style={{
                       left: `${15 + i * 12}%`,
                       top: `${25 + i * 8}%`,

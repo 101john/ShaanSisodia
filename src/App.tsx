@@ -1,6 +1,5 @@
 import React from 'react';
 import CustomCursor from './components/CustomCursor';
-import WebGLBackground from './components/WebGLBackground';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
@@ -10,15 +9,9 @@ import ContactSection from './components/ContactSection';
 
 function App() {
   return (
-    <div className="relative min-h-screen bg-dark-bg text-text-primary">
-      {/* Noise overlay */}
-      <div className="noise-overlay"></div>
-      
+    <div className="relative min-h-screen bg-black text-text-primary">
       {/* Custom cursor */}
       <CustomCursor />
-      
-      {/* WebGL Background */}
-      <WebGLBackground />
       
       {/* Navigation */}
       <Navigation />
