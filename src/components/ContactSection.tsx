@@ -560,7 +560,6 @@ const ContactSection: React.FC = () => {
             >
               // Building the future, one line at a time
             </motion.span>
-          </div>
         </motion.div>
       </div>
 
