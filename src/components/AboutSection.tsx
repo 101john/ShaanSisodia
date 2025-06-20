@@ -99,6 +99,7 @@ const AboutSection: React.FC = () => {
                   <div className="text-gray-400 ml-4">implement() → <span className="text-green-400">efficient</span></div>
                   <div className="text-gray-400 ml-4">optimize() → <span className="text-green-400">performant</span></div>
                   <div className="text-gray-400">}</div>
+                }
                 </motion.div>
               </div>
               
