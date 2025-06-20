@@ -94,12 +94,11 @@ const AboutSection: React.FC = () => {
                   className="space-y-2"
                 >
                   <div className="text-cyan-400">// System Architecture</div>
-                  <div className="text-gray-400">class <span className="text-purple-400">SystemBuilder</span> {</div>
+                  <div className="text-gray-400">class <span className="text-purple-400">SystemBuilder</span> {'{'}</div>
                   <div className="text-gray-400 ml-4">design() → <span className="text-green-400">scalable</span></div>
                   <div className="text-gray-400 ml-4">implement() → <span className="text-green-400">efficient</span></div>
                   <div className="text-gray-400 ml-4">optimize() → <span className="text-green-400">performant</span></div>
-                  <div className="text-gray-400">}</div>
-                }
+                  <div className="text-gray-400">{'}'}</div>
                 </motion.div>
               </div>
               
