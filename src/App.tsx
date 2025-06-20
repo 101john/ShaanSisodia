@@ -3,34 +3,24 @@ import CustomCursor from './components/CustomCursor';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
-import TechShowcase from './components/TechShowcase';
+import TechStack from './components/TechStack';
 import ProjectsSection from './components/ProjectsSection';
 import ContactSection from './components/ContactSection';
+import TerminalOverlay from './components/TerminalOverlay';
 
 function App() {
   return (
-    <div className="relative min-h-screen bg-black text-text-primary">
-      {/* Custom cursor */}
+    <div className="relative min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
       <CustomCursor />
-      
-      {/* Navigation */}
       <Navigation />
+      <TerminalOverlay />
       
-      {/* Main content */}
       <main>
         <HeroSection />
-        <div id="about">
-          <AboutSection />
-        </div>
-        <div id="tech">
-          <TechShowcase />
-        </div>
-        <div id="works">
-          <ProjectsSection />
-        </div>
-        <div id="contact">
-          <ContactSection />
-        </div>
+        <AboutSection />
+        <TechStack />
+        <ProjectsSection />
+        <ContactSection />
       </main>
     </div>
   );
