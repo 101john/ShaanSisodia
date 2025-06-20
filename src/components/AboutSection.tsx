@@ -1,252 +1,151 @@
 import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Brain, Zap, Target } from 'lucide-react';
 
 const AboutSection: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 0.8]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
+  const principles = [
+    {
+      icon: Brain,
+      title: 'Systems Thinking',
+      description: 'Every component serves the whole. I architect solutions that scale from conception to production.'
     },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60, rotateX: -15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transition: {
-        duration: 1,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
+    {
+      icon: Zap,
+      title: 'Performance First',
+      description: 'Code that runs fast, scales efficiently, and handles edge cases gracefully.'
     },
-  };
-
-  const textRevealVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-      },
-    },
-  };
-
-  const letterVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const title = "My Approach";
+    {
+      icon: Target,
+      title: 'Purpose-Driven',
+      description: 'Every line of code has intention. No bloat, no shortcuts, no compromises.'
+    }
+  ];
 
   return (
-    <section ref={sectionRef} className="min-h-screen py-32 px-8 relative">
-      {/* Transition Effect */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-dark-bg via-transparent to-dark-bg"
-        style={{ opacity: useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [1, 0, 0, 1]) }}
-      />
-      
+    <section id="about" className="py-32 px-6 relative">
       <div className="max-w-7xl mx-auto">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          {/* Left Side - Enhanced Profile */}
-          <motion.div 
-            style={{ y, opacity, scale }}
-            className="relative group"
+          <h2 className="text-4xl md:text-6xl font-bold mb-8">
+            <span className="text-gray-100">My</span>{' '}
+            <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Approach
+            </span>
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-8" />
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
+          {/* Left side - Philosophy */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="space-y-8"
           >
-            <div className="relative w-80 h-96 mx-auto lg:mx-0 overflow-hidden rounded-3xl bg-gradient-to-br from-dark-surface to-dark-bg border border-dark-border group-hover:border-accent-primary/30 transition-all duration-700">
-              {/* Animated background gradient */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-accent-primary/5 to-accent-secondary/5"
-                animate={{
-                  background: [
-                    "linear-gradient(135deg, rgba(0,173,181,0.05) 0%, rgba(247,37,133,0.05) 100%)",
-                    "linear-gradient(225deg, rgba(247,37,133,0.05) 0%, rgba(0,173,181,0.05) 100%)",
-                    "linear-gradient(135deg, rgba(0,173,181,0.05) 0%, rgba(247,37,133,0.05) 100%)",
-                  ]
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              />
-              
-              {/* Profile content */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  className="w-32 h-32 rounded-full border-2 border-accent-primary/40 flex items-center justify-center relative overflow-hidden"
-                  whileHover={{ scale: 1.05, borderColor: "rgba(0,173,181,0.8)" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <span className="text-4xl font-bold text-accent-primary z-10">SS</span>
-                  
-                  {/* Rotating ring */}
-                  <motion.div
-                    className="absolute inset-0 border-2 border-transparent border-t-accent-primary/60 rounded-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  />
-                </motion.div>
-              </div>
-              
-              {/* Scanning line effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-primary/10 to-transparent"
-                animate={{
-                  x: [-100, 400],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-              
-              {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-accent-primary/30" />
-              <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-accent-primary/30" />
-              <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-accent-primary/30" />
-              <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-accent-primary/30" />
+            <div className="space-y-6">
+              <p className="text-xl text-gray-300 leading-relaxed">
+                I don't just write code—I architect solutions.
+              </p>
+              <p className="text-lg text-gray-400 leading-relaxed">
+                Whether it's building an OS from scratch in C and Assembly, creating real-time 
+                civilization simulations, or deploying full-stack web applications, I focus on 
+                systems that scale and interfaces that feel inevitable.
+              </p>
+              <p className="text-lg text-gray-400 leading-relaxed">
+                Currently mastering: Linux internals, ML in Python, advanced system architecture
+              </p>
             </div>
+
+            <motion.blockquote
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="border-l-4 border-cyan-400 pl-6 py-4 bg-gray-900/50 rounded-r"
+            >
+              <p className="text-xl italic text-cyan-300 font-light">
+                "Code is a tool for bringing ideas to life."
+              </p>
+            </motion.blockquote>
           </motion.div>
 
-          {/* Right Side - Enhanced Content */}
-          <div className="space-y-10">
-            <motion.div variants={itemVariants}>
-              <motion.h2 
-                variants={textRevealVariants}
-                className="text-4xl md:text-5xl font-bold mb-8 leading-tight"
-              >
-                {title.split('').map((char, index) => (
-                  <motion.span
-                    key={index}
-                    variants={letterVariants}
-                    className={char === ' ' ? 'mr-4' : (index >= 3 ? 'text-accent-primary' : 'text-text-primary')}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </motion.h2>
-              
-              <motion.div
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="w-32 h-1 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-full origin-left"
-              />
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="space-y-8">
-              <motion.p 
-                className="text-lg text-text-secondary leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                I build systems, not screens. Every interface should breathe. 
-                Every interaction should feel <span className="text-accent-primary font-semibold">inevitable</span>.
-              </motion.p>
-              
-              <motion.p 
-                className="text-lg text-text-secondary leading-relaxed"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                With expertise spanning <span className="text-accent-primary font-semibold">TypeScript</span>, 
-                <span className="text-accent-primary font-semibold"> Python</span>, and 
-                <span className="text-accent-primary font-semibold"> C++</span>, I architect 
-                solutions that scale from conception to production.
-              </motion.p>
-
-              <motion.blockquote
-                variants={itemVariants}
-                className="relative border-l-4 border-accent-primary/40 pl-8 py-6 my-10 bg-dark-surface/30 rounded-r-xl"
-              >
-                <motion.p 
-                  className="text-xl italic text-text-primary font-light leading-relaxed"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  "Function without soul is noise."
-                </motion.p>
-                
+          {/* Right side - Visual element */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="relative w-full h-96 bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg overflow-hidden border border-cyan-500/20">
+              {/* Code-like visualization */}
+              <div className="absolute inset-0 p-6 font-mono text-sm">
                 <motion.div
-                  className="absolute -left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-accent-primary rounded-full"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 2 }}
+                  className="space-y-2"
                 >
-                  <motion.div
-                    className="absolute inset-0 bg-accent-primary rounded-full"
-                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
+                  <div className="text-cyan-400">// System Architecture</div>
+                  <div className="text-gray-400">class <span className="text-purple-400">SystemBuilder</span> {</div>
+                  <div className="text-gray-400 ml-4">design() → <span className="text-green-400">scalable</span></div>
+                  <div className="text-gray-400 ml-4">implement() → <span className="text-green-400">efficient</span></div>
+                  <div className="text-gray-400 ml-4">optimize() → <span className="text-green-400">performant</span></div>
+                  <div className="text-gray-400">}</div>
                 </motion.div>
-              </motion.blockquote>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="pt-8">
-              <motion.h3 
-                className="text-xl font-semibold mb-6 text-text-primary"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                Currently mastering
-              </motion.h3>
-              <div className="flex flex-wrap gap-4">
-                {['Docker', 'PostgreSQL', 'Git', 'CMake'].map((tech, index) => (
-                  <motion.span
-                    key={tech}
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      y: -4,
-                      boxShadow: "0 10px 25px rgba(0,173,181,0.2)"
-                    }}
-                    className="px-5 py-3 bg-dark-surface border border-accent-primary/20 rounded-full text-sm font-medium text-accent-primary hover:border-accent-primary/60 hover:bg-accent-primary/5 transition-all duration-300 cursor-default relative overflow-hidden group"
-                  >
-                    <span className="relative z-10">{tech}</span>
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10"
-                      initial={{ x: '-100%' }}
-                      whileHover={{ x: '100%' }}
-                      transition={{ duration: 0.6 }}
-                    />
-                  </motion.span>
-                ))}
               </div>
+              
+              {/* Animated grid overlay */}
+              <motion.div
+                animate={{ opacity: [0.1, 0.3, 0.1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)
+                  `,
+                  backgroundSize: '20px 20px'
+                }}
+              />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Principles */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          {principles.map((principle, index) => (
+            <motion.div
+              key={principle.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.2, duration: 0.6 }}
+              whileHover={{ y: -10, scale: 1.02 }}
+              className="group p-8 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-cyan-500/50 transition-all duration-300"
+            >
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <principle.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-100">{principle.title}</h3>
+              </div>
+              <p className="text-gray-400 leading-relaxed">{principle.description}</p>
             </motion.div>
-          </div>
+          ))}
         </motion.div>
       </div>
     </section>

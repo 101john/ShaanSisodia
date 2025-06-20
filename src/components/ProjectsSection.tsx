@@ -1,128 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, X } from 'lucide-react';
-import Particles from './Particles';
+import { ExternalLink, Github, X } from 'lucide-react';
 
 interface Project {
   id: string;
   title: string;
-  subtitle: string;
   description: string;
-  image: string;
+  longDescription: string;
   tech: string[];
-  link: string;
-  theme: 'neural' | 'system' | 'crypto' | 'visual';
+  image: string;
+  github?: string;
+  live?: string;
+  status: 'completed' | 'in-progress' | 'planned';
 }
 
 const ProjectsSection: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  // Prevent background scroll when modal is open
-  useEffect(() => {
-    if (selectedProject) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-    }
-    return () => {
-      document.body.classList.remove('overflow-hidden');
-    };
-  }, [selectedProject]);
-
   const projects: Project[] = [
     {
-      id: 'hypnos',
-      title: 'HYPNOS',
-      subtitle: 'Neural Interface Design',
-      description: 'An experimental interface that responds to user behavior patterns, creating adaptive layouts that evolve with interaction. Built with real-time data processing and machine learning algorithms.',
-      image: 'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg',
-      tech: ['TypeScript', 'WebGL', 'TensorFlow.js'],
-      link: '#',
-      theme: 'neural',
-    },
-    {
-      id: 'nexus',
-      title: 'NEXUS',
-      subtitle: 'Distributed System Architecture',
-      description: 'A high-performance distributed system for real-time data synchronization across multiple nodes. Handles millions of operations per second with sub-millisecond latency.',
-      image: 'https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg',
-      tech: ['C++', 'Docker', 'PostgreSQL'],
-      link: '#',
-      theme: 'system',
-    },
-    {
-      id: 'cipher',
-      title: 'CIPHER',
-      subtitle: 'Cryptographic Protocol Suite',
-      description: 'Advanced encryption protocols with quantum-resistant algorithms. Provides end-to-end security with minimal performance overhead.',
+      id: 'os',
+      title: 'Custom Operating System',
+      description: 'Built from scratch using C and Assembly',
+      longDescription: 'A complete operating system implementation featuring memory management, process scheduling, and basic I/O operations. Implements core OS concepts including virtual memory, interrupt handling, and system calls. Written entirely in C and Assembly for x86 architecture.',
+      tech: ['C', 'Assembly', 'Low-level programming', 'x86 Architecture'],
       image: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg',
-      tech: ['Python', 'C', 'CMake'],
-      link: '#',
-      theme: 'crypto',
+      status: 'completed'
     },
     {
-      id: 'aurora',
-      title: 'AURORA',
-      subtitle: 'Visual Computing Engine',
-      description: 'Real-time rendering engine with advanced lighting and particle systems. Optimized for both performance and visual fidelity.',
-      image: 'https://images.pexels.com/photos/158826/structure-light-led-movement-158826.jpeg',
-      tech: ['C++', 'OpenGL', 'GLSL'],
-      link: '#',
-      theme: 'visual',
+      id: 'civsim',
+      title: 'CivSim - Civilization Simulator',
+      description: 'Real-time simulation with AI-generated lore',
+      longDescription: 'A complex civilization simulation featuring dynamic population growth, resource management, and diplomatic systems. Integrates OpenAI GPT for procedural lore generation and storytelling. Includes advanced algorithms for trade routes, cultural evolution, and technological progression.',
+      tech: ['Python', 'Pygame', 'NumPy', 'OpenAI API', 'AI Integration'],
+      image: 'https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg',
+      status: 'completed'
     },
+    {
+      id: 'dailyglitch',
+      title: 'Daily Glitch',
+      description: 'Full-stack mystery story platform',
+      longDescription: 'A sophisticated web platform for interactive mystery stories with custom CMS capabilities. Features real-time story progression, user engagement tracking, and dynamic content delivery. Built with modern web technologies and deployed with full CI/CD pipeline.',
+      tech: ['React', 'Next.js', 'Supabase', 'TailwindCSS', 'TypeScript'],
+      image: 'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg',
+      live: 'https://dailyglitch.org',
+      status: 'completed'
+    },
+    {
+      id: 'ardenvale',
+      title: 'Ardenvale RPG',
+      description: 'Text-based Dark Souls-inspired RPG',
+      longDescription: 'A complex text-based RPG featuring intricate combat mechanics, character progression, and rich ASCII art. Implements advanced game state management, save/load systems, and procedural content generation. Inspired by Dark Souls difficulty and atmosphere.',
+      tech: ['Python', 'Object-oriented Design', 'Game Logic', 'ASCII Art'],
+      image: 'https://images.pexels.com/photos/158826/structure-light-led-movement-158826.jpeg',
+      status: 'completed'
+    }
   ];
 
-  const getThemeColors = (theme: Project['theme']) => {
-    switch (theme) {
-      case 'neural':
-        return {
-          primary: '#00ADB5',
-          secondary: '#4ECDC4',
-          particles: ['#00ADB5', '#4ECDC4', '#ffffff'],
-        };
-      case 'system':
-        return {
-          primary: '#F72585',
-          secondary: '#B5179E',
-          particles: ['#F72585', '#B5179E', '#ffffff'],
-        };
-      case 'crypto':
-        return {
-          primary: '#7209B7',
-          secondary: '#A663CC',
-          particles: ['#7209B7', '#A663CC', '#ffffff'],
-        };
-      case 'visual':
-        return {
-          primary: '#F77F00',
-          secondary: '#FCBF49',
-          particles: ['#F77F00', '#FCBF49', '#ffffff'],
-        };
+  const getStatusColor = (status: Project['status']) => {
+    switch (status) {
+      case 'completed': return 'text-green-400 border-green-400/30';
+      case 'in-progress': return 'text-yellow-400 border-yellow-400/30';
+      case 'planned': return 'text-blue-400 border-blue-400/30';
     }
   };
 
   return (
-    <section className="py-32 px-8 relative overflow-hidden">
-      {/* Particle Background */}
-      <div className="absolute inset-0 opacity-30">
-        <Particles
-          particleCount={100}
-          particleSpread={12}
-          speed={0.03}
-          particleColors={['#00ADB5', '#F72585', '#ffffff']}
-          moveParticlesOnHover={true}
-          particleHoverFactor={0.3}
-          alphaParticles={true}
-          particleBaseSize={60}
-          sizeRandomness={0.6}
-          cameraDistance={18}
-          disableRotation={false}
-          className="w-full h-full"
-        />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
+    <section id="projects" className="py-32 px-6 relative">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -130,271 +75,180 @@ const ProjectsSection: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Selected <span className="text-accent-primary">Works</span>
-          </motion.h2>
-          <motion.p 
-            className="text-lg text-text-secondary max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Carefully crafted digital experiences that push the boundaries of what's possible
-          </motion.p>
-          
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="w-24 h-1 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-full mx-auto mt-8"
-          />
+          <h2 className="text-4xl md:text-6xl font-bold mb-8">
+            <span className="text-gray-100">Selected</span>{' '}
+            <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Work
+            </span>
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Systems and applications that demonstrate technical depth and creative problem-solving
+          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mt-8" />
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {projects.map((project, index) => {
-            const themeColors = getThemeColors(project.theme);
-            return (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 80, rotateX: -15 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: index * 0.15,
-                  ease: [0.25, 0.46, 0.45, 0.94]
-                }}
-                whileHover={{ 
-                  y: -20,
-                  rotateX: 5,
-                  rotateY: index % 2 === 0 ? 5 : -5,
-                  transition: { duration: 0.4 }
-                }}
-                className="group cursor-pointer magnetic project-card"
-                onClick={() => setSelectedProject(project)}
-              >
-                <div className="relative overflow-hidden rounded-3xl bg-dark-surface/80 backdrop-blur-sm border border-dark-border hover:border-accent-primary/40 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-accent-primary/10">
-                  {/* Image */}
-                  <div className="relative h-72 overflow-hidden">
-                    <motion.img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    
-                    {/* Dynamic overlay based on theme */}
-                    <motion.div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{
-                        background: `linear-gradient(135deg, ${themeColors.primary}20, ${themeColors.secondary}20)`
-                      }}
-                    />
-                    
-                    {/* Animated scan lines */}
-                    <motion.div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-30"
-                      style={{
-                        background: `repeating-linear-gradient(
-                          90deg,
-                          transparent,
-                          transparent 2px,
-                          ${themeColors.primary}10 2px,
-                          ${themeColors.primary}10 4px
-                        )`
-                      }}
-                      animate={{
-                        x: [-100, 100],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    />
-                    
-                    {/* Hover indicator */}
-                    <motion.div
-                      className="absolute top-6 right-6 w-12 h-12 bg-dark-bg/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 border border-accent-primary/30"
-                      initial={{ scale: 0, rotate: -180 }}
-                      whileHover={{ scale: 1, rotate: 0 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      <ExternalLink className="w-5 h-5 text-accent-primary" />
-                    </motion.div>
-
-                    {/* Corner brackets */}
-                    <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-accent-primary/0 group-hover:border-accent-primary/60 transition-colors duration-500" />
-                    <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-accent-primary/0 group-hover:border-accent-primary/60 transition-colors duration-500" />
-                    <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-accent-primary/0 group-hover:border-accent-primary/60 transition-colors duration-500" />
-                    <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-accent-primary/0 group-hover:border-accent-primary/60 transition-colors duration-500" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-8">
-                    <motion.h3 
-                      className="text-2xl font-bold mb-3 text-text-primary group-hover:text-accent-primary transition-colors duration-400"
-                      whileHover={{ x: 5 }}
-                    >
-                      {project.title}
-                    </motion.h3>
-                    <motion.p 
-                      className="text-text-secondary mb-6 font-light leading-relaxed"
-                      initial={{ opacity: 0.7 }}
-                      whileHover={{ opacity: 1 }}
-                    >
-                      {project.subtitle}
-                    </motion.p>
-                    
-                    {/* Tech stack */}
-                    <div className="flex flex-wrap gap-3">
-                      {project.tech.map((tech, techIndex) => (
-                        <motion.span
-                          key={tech}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: techIndex * 0.1 }}
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          className="px-4 py-2 text-xs font-medium bg-accent-primary/10 text-accent-primary rounded-full border border-accent-primary/20 hover:border-accent-primary/40 hover:bg-accent-primary/20 transition-all duration-300"
-                        >
-                          {tech}
-                        </motion.span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Animated border */}
-                  <motion.div
-                    className="absolute inset-0 border-2 border-transparent rounded-3xl"
-                    whileHover={{ 
-                      borderColor: themeColors.primary + '40',
-                      boxShadow: `0 0 30px ${themeColors.primary}20`
-                    }}
-                    transition={{ duration: 0.4 }}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ y: -10, scale: 1.02 }}
+              onClick={() => setSelectedProject(project)}
+              className="group cursor-pointer interactive"
+            >
+              <div className="relative overflow-hidden rounded-lg bg-gray-900/50 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300">
+                {/* Project Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
+                  
+                  {/* Status Badge */}
+                  <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-mono border ${getStatusColor(project.status)} bg-gray-900/80 backdrop-blur-sm`}>
+                    {project.status.replace('-', ' ')}
+                  </div>
                 </div>
-              </motion.div>
-            );
-          })}
+
+                {/* Project Info */}
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-cyan-400 transition-colors duration-200">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-400 mb-4 leading-relaxed">
+                    {project.description}
+                  </p>
+                  
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tech.slice(0, 3).map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 text-xs bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {project.tech.length > 3 && (
+                      <span className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded-full">
+                        +{project.tech.length - 3} more
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action Links */}
+                  <div className="flex items-center space-x-4">
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-center text-cyan-400 text-sm font-medium"
+                    >
+                      <span>View Details</span>
+                      <ExternalLink className="w-4 h-4 ml-2" />
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Enhanced Project Modal */}
+        {/* Project Modal */}
         <AnimatePresence>
           {selectedProject && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-dark-bg/95 backdrop-blur-2xl z-[9999] flex items-center justify-center p-8"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6"
               onClick={() => setSelectedProject(null)}
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 100, rotateX: -15 }}
-                animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: 100, rotateX: -15 }}
-                transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
-                className="relative max-w-5xl w-full bg-dark-surface/90 backdrop-blur-sm border border-dark-border rounded-3xl overflow-hidden z-[10000]"
+                initial={{ opacity: 0, scale: 0.9, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 50 }}
+                className="relative max-w-4xl w-full bg-gray-900 rounded-lg border border-gray-700 overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Close button */}
-                <motion.button
+                {/* Close Button */}
+                <button
                   onClick={() => setSelectedProject(null)}
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="absolute top-8 right-8 w-12 h-12 bg-dark-bg/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-accent-primary/20 transition-colors z-[10001] border border-accent-primary/20"
+                  className="absolute top-4 right-4 z-10 w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors duration-200"
                 >
-                  <X className="w-6 h-6 text-text-primary" />
-                </motion.button>
+                  <X className="w-5 h-5 text-gray-300" />
+                </button>
 
-                {/* Modal content */}
+                {/* Modal Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-2">
-                  <div className="relative h-80 lg:h-full">
+                  <div className="relative h-64 lg:h-full">
                     <img
                       src={selectedProject.image}
                       alt={selectedProject.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10" />
-                    
-                    {/* Animated overlay */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-primary/5 to-transparent"
-                      animate={{ x: [-100, 400] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900/50 to-transparent" />
                   </div>
                   
-                  <div className="p-12 lg:p-16">
-                    <motion.h3 
-                      className="text-4xl font-bold mb-4 text-text-primary"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
+                  <div className="p-8">
+                    <div className={`inline-block px-3 py-1 rounded-full text-xs font-mono border ${getStatusColor(selectedProject.status)} bg-gray-800 mb-4`}>
+                      {selectedProject.status.replace('-', ' ')}
+                    </div>
+                    
+                    <h3 className="text-3xl font-bold text-gray-100 mb-4">
                       {selectedProject.title}
-                    </motion.h3>
-                    <motion.p 
-                      className="text-accent-primary mb-8 font-medium text-lg"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      {selectedProject.subtitle}
-                    </motion.p>
-                    <motion.p 
-                      className="text-text-secondary mb-10 leading-relaxed text-lg"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      {selectedProject.description}
-                    </motion.p>
+                    </h3>
                     
-                    <motion.div 
-                      className="flex flex-wrap gap-3 mb-10"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      {selectedProject.tech.map((tech, index) => (
-                        <motion.span
-                          key={tech}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.6 + index * 0.1 }}
-                          className="px-5 py-3 bg-accent-primary/10 text-accent-primary rounded-full border border-accent-primary/20 font-medium"
+                    <p className="text-gray-300 mb-6 leading-relaxed">
+                      {selectedProject.longDescription}
+                    </p>
+                    
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-gray-100 mb-3">Technologies Used</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProject.tech.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1 text-sm bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-4">
+                      {selectedProject.github && (
+                        <motion.a
+                          href={selectedProject.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center px-6 py-3 bg-gray-800 hover:bg-gray-700 text-gray-100 rounded-lg transition-colors duration-200"
                         >
-                          {tech}
-                        </motion.span>
-                      ))}
-                    </motion.div>
-                    
-                    <motion.button
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 }}
-                      whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(0,173,181,0.3)" }}
-                      whileTap={{ scale: 0.95 }}
-                      className="magnetic inline-flex items-center gap-3 px-8 py-4 bg-accent-primary text-dark-bg font-semibold rounded-full hover:bg-accent-primary/90 transition-all duration-300 relative overflow-hidden group"
-                    >
-                      <span className="relative z-10">View Project</span>
-                      <ExternalLink className="w-5 h-5 relative z-10" />
+                          <Github className="w-5 h-5 mr-2" />
+                          View Code
+                        </motion.a>
+                      )}
                       
-                      {/* Button shine effect */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '100%' }}
-                        transition={{ duration: 0.6 }}
-                      />
-                    </motion.button>
+                      {selectedProject.live && (
+                        <motion.a
+                          href={selectedProject.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+                        >
+                          <ExternalLink className="w-5 h-5 mr-2" />
+                          Live Demo
+                        </motion.a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>

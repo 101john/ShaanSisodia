@@ -1,205 +1,193 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-
-const beforeMoves = 'CRAFTING CODE THAT';
-const moves = 'MOVES';
+import { ChevronDown, Code, Cpu } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
-  const [bootSequence, setBootSequence] = useState(0);
-  const [showContent, setShowContent] = useState(false);
-  const [displayed, setDisplayed] = useState('');
-  const [phase, setPhase] = useState<'typing-main' | 'pause' | 'typing-moves' | 'wait-cursor' | 'show-rest'>('typing-main');
-  const [showMoves, setShowMoves] = useState(false);
-  const [showRest, setShowRest] = useState(false);
-  const [movesTyped, setMovesTyped] = useState('');
-
-  useEffect(() => {
-    const sequence = async () => {
-      // Boot sequence
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setBootSequence(1);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setBootSequence(2);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setBootSequence(3);
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setShowContent(true);
-    };
-    sequence();
-  }, []);
-
-  // Typewriter effect for 'CRAFTING CODE THAT', pause, then type 'MOVES' faster, then show rest
-  useEffect(() => {
-    if (!showContent) return;
-
-    const startTyping = async () => {
-      // Start typing main text immediately after boot sequence
-      if (phase === 'typing-main') {
-        let i = 0;
-        const type = () => {
-          if (i < beforeMoves.length) {
-            setDisplayed(beforeMoves.slice(0, i + 1));
-            i++;
-            setTimeout(type, 80);
-          } else {
-            setPhase('pause');
-          }
-        };
-        type();
-      }
-    };
-
-    startTyping();
-  }, [showContent, phase]);
-
-  // Handle subsequent phases
-  useEffect(() => {
-    if (phase === 'pause') {
-      setTimeout(() => {
-        setShowMoves(true);
-        setPhase('typing-moves');
-      }, 1000);
-    } else if (phase === 'typing-moves') {
-      let i = 0;
-      const typeMoves = () => {
-        if (i < moves.length) {
-          setMovesTyped(moves.slice(0, i + 1));
-          i++;
-          setTimeout(typeMoves, 75);
-        } else {
-          setPhase('wait-cursor');
-          setTimeout(() => setPhase('show-rest'), 500);
-        }
-      };
-      typeMoves();
-    } else if (phase === 'show-rest') {
-      setShowRest(true);
-    }
-  }, [phase]);
-
-  const bootMessages = [
-    'SYSTEM ONLINE.',
-    'INITIALIZING INTERFACE...',
-    'WELCOME TO THE EXPERIENCE.'
+  const [displayText, setDisplayText] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
+  const [currentPhase, setCurrentPhase] = useState(0);
+  
+  const phases = [
+    'SHAAN SISODIA',
+    'SYSTEMS ARCHITECT',
+    'CODE CRAFTSMAN'
   ];
 
-  return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Boot Sequence */}
-      {!showContent && (
-        <motion.div 
-          className="fixed inset-0 flex items-center justify-center bg-black z-20"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="font-mono text-cyan-500 text-sm tracking-wider">
-            {bootMessages.slice(0, bootSequence).map((message, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="mb-3 relative"
-              >
-                <span className="relative">
-                  {message}
-                  <motion.div
-                    className="absolute -inset-1 bg-cyan-500/10 blur-sm"
-                    animate={{ opacity: [0, 0.5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                </span>
-              </motion.div>
-            ))}
-            {bootSequence > 0 && bootSequence < 4 && (
-              <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
-                className="inline-block ml-2 text-cyan-500"
-              >
-                █
-              </motion.span>
-            )}
-          </div>
-        </motion.div>
-      )}
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    const typeText = (text: string, callback?: () => void) => {
+      let index = 0;
+      const timer = setInterval(() => {
+        if (index <= text.length) {
+          setDisplayText(text.slice(0, index));
+          index++;
+        } else {
+          clearInterval(timer);
+          if (callback) {
+            timeout = setTimeout(callback, 1000);
+          }
+        }
+      }, 80);
+    };
 
-      {/* Main Content */}
-      {showContent && (
+    const cycle = () => {
+      typeText(phases[currentPhase], () => {
+        setCurrentPhase((prev) => (prev + 1) % phases.length);
+      });
+    };
+
+    cycle();
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [currentPhase]);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+      {/* Animated grid background */}
+      <div className="absolute inset-0 opacity-10">
+        <motion.div
+          animate={{ 
+            backgroundPosition: ['0px 0px', '50px 50px'],
+          }}
+          transition={{ 
+            duration: 20, 
+            repeat: Infinity, 
+            ease: 'linear' 
+          }}
+          className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }}
+        />
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [-20, 20, -20],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 text-center max-w-6xl mx-auto">
+        {/* Main heading with typewriter effect */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-8"
+        >
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6">
+            <span className="font-mono bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {displayText}
+              {showCursor && (
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                  className="text-cyan-400"
+                >
+                  |
+                </motion.span>
+              )}
+            </span>
+          </h1>
+        </motion.div>
+
+        {/* Subtitle with staggered animation */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="text-center px-8 max-w-7xl mx-auto relative z-10"
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="mb-12"
         >
-          <div className="mb-12">
-            <h1 className="font-black leading-none tracking-tight text-5xl md:text-7xl lg:text-8xl relative inline-block" style={{lineHeight: 1.1}}>
-              <span className="relative inline-block hero-gradient-static"
-                style={{
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  backgroundImage: 'linear-gradient(90deg, #F72585, #00ADB5)',
-                  backgroundSize: '100% 100%',
-                  backgroundPosition: '0% 0%'
-                }}
-              >
-                {displayed}
-              </span>
-              {showMoves && (
-                <span className="relative inline-block ml-2 hero-moves-gradient-seamless">{movesTyped}</span>
-              )}
-              <span className="typewriter-cursor text-cyan-500">{phase !== 'show-rest' && '|'}</span>
-            </h1>
-          </div>
-          {showRest && (
-            <>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
-              >
-                <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-16 font-light tracking-wide leading-relaxed">
-                  Systems engineer. Visual architect. Code craftsman from the UK.
-                  <br />
-                  <span className="text-cyan-500 font-medium">Building digital experiences that breathe.</span>
-                </p>
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 1, delay: 0.4 }}
-                  className="w-24 h-0.5 bg-gradient-to-r from-cyan-500 to-[#F72585] mx-auto"
-                />
-              </motion.div>
-              {/* Floating Elements */}
-              <div className="absolute inset-0 pointer-events-none">
-                {[...Array(8)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-cyan-500/30 rounded-full"
-                    style={{
-                      left: `${15 + i * 12}%`,
-                      top: `${25 + i * 8}%`,
-                    }}
-                    animate={{
-                      y: [-30, 30, -30],
-                      opacity: [0.1, 0.6, 0.1],
-                      scale: [0.5, 1.2, 0.5],
-                    }}
-                    transition={{
-                      duration: 6 + i * 0.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: i * 0.8,
-                    }}
-                  />
-                ))}
-              </div>
-            </>
-          )}
+          <p className="text-xl md:text-2xl text-gray-300 mb-6 font-light">
+            I build systems that do interesting things.
+          </p>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            From operating systems to real-time simulations, I create software that matters.
+            Every line of code serves a purpose, every system scales with intention.
+          </p>
         </motion.div>
-      )}
+
+        {/* Action buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.6 }}
+          className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(0, 255, 255, 0.3)' }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-gray-900 font-semibold rounded-sm overflow-hidden interactive"
+          >
+            <span className="relative z-10 flex items-center space-x-2">
+              <Code className="w-5 h-5" />
+              <span>View Projects</span>
+            </span>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400"
+              initial={{ x: '-100%' }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group px-8 py-4 border border-cyan-500/50 text-cyan-400 font-semibold rounded-sm hover:bg-cyan-500/10 transition-all duration-200 interactive"
+          >
+            <span className="flex items-center space-x-2">
+              <Cpu className="w-5 h-5" />
+              <span>Get In Touch</span>
+            </span>
+          </motion.button>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3, duration: 0.8 }}
+          className="flex flex-col items-center"
+        >
+          <span className="text-sm text-gray-500 mb-2">Scroll to explore</span>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <ChevronDown className="w-6 h-6 text-cyan-400" />
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Glowing orbs */}
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
     </section>
   );
 };
