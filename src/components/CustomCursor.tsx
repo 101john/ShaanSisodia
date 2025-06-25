@@ -14,14 +14,16 @@ const CustomCursor: React.FC = () => {
 
     const handleMouseEnter = (e: Event) => {
       const target = e.target as HTMLElement;
-      if (target.matches('button, a, .interactive')) {
+      // Check if target is an Element and has the matches method
+      if (target && typeof target.matches === 'function' && target.matches('button, a, .interactive')) {
         setIsHovering(true);
       }
     };
 
     const handleMouseLeave = (e: Event) => {
       const target = e.target as HTMLElement;
-      if (target.matches('button, a, .interactive')) {
+      // Check if target is an Element and has the matches method
+      if (target && typeof target.matches === 'function' && target.matches('button, a, .interactive')) {
         setIsHovering(false);
       }
     };
