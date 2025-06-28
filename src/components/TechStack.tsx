@@ -1,36 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import TechCubes from './TechCubes';
+import Cubes from './Cubes';
 
 const TechStack: React.FC = () => {
   const techCategories = [
     {
       title: 'Languages',
       items: [
-        { name: 'TypeScript', description: 'The only way to write JavaScript', icon: 'https://cdn.simpleicons.org/typescript' },
-        { name: 'Python', description: 'My go-to for complex systems', icon: 'https://cdn.simpleicons.org/python' },
-        { name: 'C++', description: 'When performance matters', icon: 'https://cdn.simpleicons.org/cplusplus' },
-        { name: 'C', description: 'Close to the metal', icon: 'https://cdn.simpleicons.org/c' },
-        { name: 'Assembly', description: 'OS development', icon: 'https://cdn.simpleicons.org/assemblyscript' },
+        { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript', color: '#3178C6' },
+        { name: 'Python', icon: 'https://cdn.simpleicons.org/python', color: '#3776AB' },
+        { name: 'C++', icon: 'https://cdn.simpleicons.org/cplusplus', color: '#00599C' },
+        { name: 'C', icon: 'https://cdn.simpleicons.org/c', color: '#A8B9CC' },
+        { name: 'Assembly', icon: 'https://cdn.simpleicons.org/assemblyscript', color: '#007ACC' },
+        { name: 'Rust', icon: 'https://cdn.simpleicons.org/rust', color: '#000000' },
       ]
     },
     {
-      title: 'Frameworks & Tools',
+      title: 'Systems & Tools',
       items: [
-        { name: 'React + Next.js', description: 'Modern web development', icon: 'https://cdn.simpleicons.org/react' },
-        { name: 'TailwindCSS', description: 'Design & styling', icon: 'https://cdn.simpleicons.org/tailwindcss' },
-        { name: 'PostgreSQL + Supabase', description: 'Database architecture', icon: 'https://cdn.simpleicons.org/postgresql' },
-        { name: 'Docker, Git, Linux', description: 'Development workflow', icon: 'https://cdn.simpleicons.org/docker' },
+        { name: 'Linux', icon: 'https://cdn.simpleicons.org/linux', color: '#FCC624' },
+        { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker', color: '#2496ED' },
+        { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql', color: '#336791' },
+        { name: 'Git', icon: 'https://cdn.simpleicons.org/git', color: '#F05032' },
+        { name: 'GDB', icon: 'https://cdn.simpleicons.org/gnu', color: '#A42E2B' },
+        { name: 'Valgrind', icon: 'https://cdn.simpleicons.org/linux', color: '#FCC624' },
+        { name: 'QEMU', icon: 'https://cdn.simpleicons.org/qemu', color: '#FF6600' },
+        { name: 'Vim', icon: 'https://cdn.simpleicons.org/vim', color: '#019733' },
       ]
     }
   ];
 
   return (
     <section id="tech" className="py-32 px-6 relative overflow-hidden">
-      {/* Tech Cubes Background */}
-      <TechCubes />
-      
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,12 +46,29 @@ const TechStack: React.FC = () => {
             </span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Tools and technologies I use to build systems that scale
+            Systems tools and languages I use to build from the ground up
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mt-8" />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Interactive Cubes Background */}
+        <div className="flex justify-center mb-16">
+          <Cubes
+            gridSize={8}
+            cubeSize={40}
+            maxAngle={35}
+            radius={2.5}
+            cellGap={8}
+            borderStyle="1px solid rgba(6, 182, 212, 0.3)"
+            faceColor="rgba(15, 23, 42, 0.8)"
+            shadow="0 0 10px rgba(6, 182, 212, 0.2)"
+            rippleColor="#06b6d4"
+            rippleSpeed={1.5}
+          />
+        </div>
+
+        {/* Tech Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {techCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.title}
@@ -59,31 +78,60 @@ const TechStack: React.FC = () => {
               transition={{ duration: 0.8, delay: categoryIndex * 0.2 }}
               className="space-y-8"
             >
-              <h3 className="text-2xl font-bold text-gray-100 mb-8">{category.title}</h3>
+              <h3 className="text-3xl font-bold text-gray-100 mb-8 text-center lg:text-left">
+                {category.title}
+              </h3>
               
-              <div className="space-y-6">
+              {/* Grid layout for tech items */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {category.items.map((item, index) => (
                   <motion.div
                     key={item.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: false }}
-                    transition={{ delay: (categoryIndex * 0.2) + (index * 0.1), duration: 0.6 }}
-                    whileHover={{ x: 10, scale: 1.02 }}
-                    className="group p-6 bg-gray-900/30 rounded-lg border border-gray-800 hover:border-cyan-500/50 transition-all duration-300"
+                    transition={{ 
+                      delay: (categoryIndex * 0.2) + (index * 0.1), 
+                      duration: 0.6,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      y: -5,
+                      boxShadow: `0 10px 30px ${item.color}20`
+                    }}
+                    className="group p-6 bg-gray-900/30 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 text-center interactive"
                   >
-                    <div className="flex items-center mb-3">
-                      <img
-                        src={item.icon}
-                        alt={item.name}
-                        className="w-8 h-8 mr-4 object-contain"
-                        style={{ filter: item.name.includes('Next.js') ? 'invert(1)' : 'none' }}
-                      />
-                      <h4 className="text-lg font-semibold text-gray-100 group-hover:text-cyan-400 transition-colors duration-200">
+                    <div className="flex flex-col items-center space-y-3">
+                      <div 
+                        className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                        style={{ 
+                          backgroundColor: `${item.color}15`,
+                          border: `1px solid ${item.color}30`
+                        }}
+                      >
+                        <img
+                          src={item.icon}
+                          alt={item.name}
+                          className="w-8 h-8 object-contain transition-all duration-300 group-hover:brightness-110"
+                          style={{ 
+                            filter: item.name === 'Rust' || item.name === 'GDB' ? 'invert(1)' : 'none' 
+                          }}
+                        />
+                      </div>
+                      <h4 className="text-sm font-semibold text-gray-100 group-hover:text-cyan-400 transition-colors duration-200">
                         {item.name}
                       </h4>
                     </div>
-                    <p className="text-sm text-gray-400 ml-12">{item.description}</p>
+                    
+                    {/* Hover glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle at center, ${item.color}10 0%, transparent 70%)`
+                      }}
+                    />
                   </motion.div>
                 ))}
               </div>
@@ -91,7 +139,7 @@ const TechStack: React.FC = () => {
           ))}
         </div>
 
-        {/* Currently Learning */}
+        {/* Currently Exploring */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,17 +149,27 @@ const TechStack: React.FC = () => {
         >
           <h3 className="text-2xl font-bold text-gray-100 mb-8">Currently Exploring</h3>
           <div className="flex flex-wrap justify-center gap-4">
-            {['Rust', 'WebAssembly', 'Kubernetes', 'Machine Learning'].map((tech, index) => (
+            {[
+              { name: 'WebAssembly', color: '#654FF0' },
+              { name: 'Kubernetes', color: '#326CE5' },
+              { name: 'Machine Learning', color: '#FF6F00' },
+              { name: 'Embedded Systems', color: '#00C853' }
+            ].map((tech, index) => (
               <motion.span
-                key={tech}
+                key={tech.name}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: false }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
                 whileHover={{ scale: 1.1, y: -5 }}
-                className="px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-700 text-cyan-400 rounded-full border border-cyan-500/30 hover:border-cyan-500/60 transition-all duration-200 cursor-default"
+                className="px-6 py-3 rounded-full border transition-all duration-200 cursor-default interactive"
+                style={{
+                  backgroundColor: `${tech.color}15`,
+                  borderColor: `${tech.color}30`,
+                  color: tech.color
+                }}
               >
-                {tech}
+                {tech.name}
               </motion.span>
             ))}
           </div>

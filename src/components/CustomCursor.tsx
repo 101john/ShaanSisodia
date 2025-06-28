@@ -1,46 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
 
 const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
-  
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
-  
-  // Smooth spring config
-  const springConfig = { damping: 25, stiffness: 400, mass: 0.5 };
-  const x = useSpring(cursorX, springConfig);
-  const y = useSpring(cursorY, springConfig);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number>();
 
   useEffect(() => {
-    let rafId: number;
-    
     const updateCursorPosition = (e: MouseEvent) => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        cursorX.set(e.clientX);
-        cursorY.set(e.clientY);
-        setIsVisible(true);
-      });
+      positionRef.current = { x: e.clientX, y: e.clientY };
+      setIsVisible(true);
+    };
+
+    const animateCursor = () => {
+      if (cursorRef.current) {
+        const { x, y } = positionRef.current;
+        cursorRef.current.style.transform = `translate3d(${x - 12}px, ${y - 12}px, 0)`;
+      }
+      rafRef.current = requestAnimationFrame(animateCursor);
     };
 
     const handleMouseEnter = (e: Event) => {
       const target = e.target as Element;
-      if (target && typeof target.closest === 'function') {
-        if (target.closest('button, a, .interactive, input, textarea, [role="button"]')) {
-          setIsHovering(true);
-        }
+      if (target?.closest?.('button, a, .interactive, input, textarea, [role="button"]')) {
+        setIsHovering(true);
       }
     };
 
     const handleMouseLeave = (e: Event) => {
       const target = e.target as Element;
-      if (target && typeof target.closest === 'function') {
-        if (target.closest('button, a, .interactive, input, textarea, [role="button"]')) {
-          setIsHovering(false);
-        }
+      if (target?.closest?.('button, a, .interactive, input, textarea, [role="button"]')) {
+        setIsHovering(false);
       }
     };
 
@@ -55,72 +47,76 @@ const CustomCursor: React.FC = () => {
     document.addEventListener('mouseup', handleMouseUp, { passive: true });
     document.addEventListener('mouseleave', handleMouseOut, { passive: true });
 
+    rafRef.current = requestAnimationFrame(animateCursor);
+
     return () => {
-      cancelAnimationFrame(rafId);
       document.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseenter', handleMouseEnter, true);
       document.removeEventListener('mouseleave', handleMouseLeave, true);
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mouseleave', handleMouseOut);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
     };
-  }, [cursorX, cursorY]);
+  }, []);
 
   if (!isVisible) return null;
 
   return (
     <>
-      {/* Main cursor dot */}
-      <motion.div
-        className="fixed pointer-events-none z-50"
+      {/* Main cursor */}
+      <div
+        ref={cursorRef}
+        className="fixed pointer-events-none z-50 transition-transform duration-75 ease-out"
         style={{
-          x,
-          y,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
-        }}
-        transition={{
-          scale: {
-            type: "spring",
-            stiffness: 500,
-            damping: 30,
-            mass: 0.2
-          }
+          width: '24px',
+          height: '24px',
+          transform: `scale(${isClicking ? 0.8 : isHovering ? 1.5 : 1})`,
+          transition: 'transform 0.15s ease-out',
         }}
       >
         {/* Outer ring for contrast */}
         <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center shadow-lg">
           {/* Inner dot */}
-          <motion.div
-            className="w-3 h-3 bg-cyan-400 rounded-full"
-            animate={{
+          <div
+            className="w-3 h-3 rounded-full transition-colors duration-200"
+            style={{
               backgroundColor: isHovering ? '#06b6d4' : '#22d3ee',
             }}
-            transition={{ duration: 0.2 }}
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Click ripple effect */}
       {isClicking && (
-        <motion.div
+        <div
           className="fixed pointer-events-none z-40"
           style={{
-            x,
-            y,
-            translateX: '-50%',
-            translateY: '-50%',
+            left: positionRef.current.x - 12,
+            top: positionRef.current.y - 12,
+            width: '24px',
+            height: '24px',
+            animation: 'clickRipple 0.4s ease-out forwards',
           }}
-          initial={{ scale: 0, opacity: 0.8 }}
-          animate={{ scale: 3, opacity: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <div className="w-6 h-6 border-2 border-cyan-400 rounded-full" />
-        </motion.div>
+        </div>
       )}
+
+      <style jsx>{`
+        @keyframes clickRipple {
+          0% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(3);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </>
   );
 };
