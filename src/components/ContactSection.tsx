@@ -49,7 +49,7 @@ const ContactSection: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -70,7 +70,7 @@ const ContactSection: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -138,7 +138,7 @@ const ContactSection: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
@@ -181,7 +181,7 @@ const ContactSection: React.FC = () => {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.5, duration: 0.8 }}
               className="p-6 bg-gray-900/30 rounded-lg border border-gray-800"
             >

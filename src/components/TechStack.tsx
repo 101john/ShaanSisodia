@@ -1,36 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import TechCubes from './TechCubes';
 
 const TechStack: React.FC = () => {
   const techCategories = [
     {
       title: 'Languages',
       items: [
-        { name: 'TypeScript', level: 90, description: 'The only way to write JavaScript' },
-        { name: 'Python', level: 95, description: 'My go-to for complex systems' },
-        { name: 'C++', level: 91, description: 'When performance matters' },
-        { name: 'C', level: 87, description: 'Close to the metal' },
-        { name: 'Assembly', level: 75, description: 'OS development' },
+        { name: 'TypeScript', description: 'The only way to write JavaScript', icon: 'https://cdn.simpleicons.org/typescript' },
+        { name: 'Python', description: 'My go-to for complex systems', icon: 'https://cdn.simpleicons.org/python' },
+        { name: 'C++', description: 'When performance matters', icon: 'https://cdn.simpleicons.org/cplusplus' },
+        { name: 'C', description: 'Close to the metal', icon: 'https://cdn.simpleicons.org/c' },
+        { name: 'Assembly', description: 'OS development', icon: 'https://cdn.simpleicons.org/assemblyscript' },
       ]
     },
     {
       title: 'Frameworks & Tools',
       items: [
-        { name: 'React + Next.js', level: 92, description: 'Modern web development' },
-        { name: 'TailwindCSS + Framer Motion', level: 88, description: 'Design & animation' },
-        { name: 'PostgreSQL + Supabase', level: 85, description: 'Database architecture' },
-        { name: 'Docker, Git, Linux', level: 89, description: 'Development workflow' },
+        { name: 'React + Next.js', description: 'Modern web development', icon: 'https://cdn.simpleicons.org/react' },
+        { name: 'TailwindCSS', description: 'Design & styling', icon: 'https://cdn.simpleicons.org/tailwindcss' },
+        { name: 'PostgreSQL + Supabase', description: 'Database architecture', icon: 'https://cdn.simpleicons.org/postgresql' },
+        { name: 'Docker, Git, Linux', description: 'Development workflow', icon: 'https://cdn.simpleicons.org/docker' },
       ]
     }
   ];
 
   return (
-    <section id="tech" className="py-32 px-6 relative">
-      <div className="max-w-7xl mx-auto">
+    <section id="tech" className="py-32 px-6 relative overflow-hidden">
+      {/* Tech Cubes Background */}
+      <TechCubes />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -51,7 +55,7 @@ const TechStack: React.FC = () => {
               key={category.title}
               initial={{ opacity: 0, x: categoryIndex === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.8, delay: categoryIndex * 0.2 }}
               className="space-y-8"
             >
@@ -63,41 +67,23 @@ const TechStack: React.FC = () => {
                     key={item.name}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    viewport={{ once: false }}
                     transition={{ delay: (categoryIndex * 0.2) + (index * 0.1), duration: 0.6 }}
-                    whileHover={{ x: 10 }}
-                    className="group"
+                    whileHover={{ x: 10, scale: 1.02 }}
+                    className="group p-6 bg-gray-900/30 rounded-lg border border-gray-800 hover:border-cyan-500/50 transition-all duration-300"
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center mb-3">
+                      <img
+                        src={item.icon}
+                        alt={item.name}
+                        className="w-8 h-8 mr-4 object-contain"
+                        style={{ filter: item.name.includes('Next.js') ? 'invert(1)' : 'none' }}
+                      />
                       <h4 className="text-lg font-semibold text-gray-100 group-hover:text-cyan-400 transition-colors duration-200">
                         {item.name}
                       </h4>
-                      <span className="text-sm font-mono text-cyan-400">
-                        {item.level}%
-                      </span>
                     </div>
-                    
-                    <p className="text-sm text-gray-400 mb-3">{item.description}</p>
-                    
-                    <div className="relative h-2 bg-gray-800 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${item.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ 
-                          delay: (categoryIndex * 0.2) + (index * 0.1) + 0.3, 
-                          duration: 1,
-                          ease: "easeOut"
-                        }}
-                        className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full relative"
-                      >
-                        <motion.div
-                          animate={{ x: [-10, 10, -10] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        />
-                      </motion.div>
-                    </div>
+                    <p className="text-sm text-gray-400 ml-12">{item.description}</p>
                   </motion.div>
                 ))}
               </div>
@@ -109,7 +95,7 @@ const TechStack: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-20 text-center"
         >
@@ -120,7 +106,7 @@ const TechStack: React.FC = () => {
                 key={tech}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
                 whileHover={{ scale: 1.1, y: -5 }}
                 className="px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-700 text-cyan-400 rounded-full border border-cyan-500/30 hover:border-cyan-500/60 transition-all duration-200 cursor-default"

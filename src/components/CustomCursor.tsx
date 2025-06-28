@@ -5,35 +5,44 @@ const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
-  const cursorRef = useRef<HTMLDivElement>(null);
   
-  // Use motion values for smooth tracking
+  // Ultra-smooth motion values with optimized spring
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   
-  // Spring configuration for smooth following
-  const springConfig = { damping: 25, stiffness: 700, mass: 0.5 };
+  // Buttery smooth spring config
+  const springConfig = { damping: 30, stiffness: 800, mass: 0.1 };
   const x = useSpring(cursorX, springConfig);
   const y = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    let rafId: number;
+    
     const updateCursorPosition = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      setIsVisible(true);
+      // Use RAF for smooth updates
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+        setIsVisible(true);
+      });
     };
 
     const handleMouseEnter = (e: Event) => {
       const target = e.target as Element;
-      if (target?.matches?.('button, a, .interactive, input, textarea')) {
-        setIsHovering(true);
+      if (target && typeof target.closest === 'function') {
+        if (target.closest('button, a, .interactive, input, textarea, [role="button"]')) {
+          setIsHovering(true);
+        }
       }
     };
 
     const handleMouseLeave = (e: Event) => {
       const target = e.target as Element;
-      if (target?.matches?.('button, a, .interactive, input, textarea')) {
-        setIsHovering(false);
+      if (target && typeof target.closest === 'function') {
+        if (target.closest('button, a, .interactive, input, textarea, [role="button"]')) {
+          setIsHovering(false);
+        }
       }
     };
 
@@ -41,15 +50,15 @@ const CustomCursor: React.FC = () => {
     const handleMouseUp = () => setIsClicking(false);
     const handleMouseOut = () => setIsVisible(false);
 
-    // Add event listeners
-    document.addEventListener('mousemove', updateCursorPosition);
-    document.addEventListener('mouseenter', handleMouseEnter, true);
-    document.addEventListener('mouseleave', handleMouseLeave, true);
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseOut);
+    document.addEventListener('mousemove', updateCursorPosition, { passive: true });
+    document.addEventListener('mouseenter', handleMouseEnter, { passive: true, capture: true });
+    document.addEventListener('mouseleave', handleMouseLeave, { passive: true, capture: true });
+    document.addEventListener('mousedown', handleMouseDown, { passive: true });
+    document.addEventListener('mouseup', handleMouseUp, { passive: true });
+    document.addEventListener('mouseleave', handleMouseOut, { passive: true });
 
     return () => {
+      cancelAnimationFrame(rafId);
       document.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseenter', handleMouseEnter, true);
       document.removeEventListener('mouseleave', handleMouseLeave, true);
@@ -65,7 +74,6 @@ const CustomCursor: React.FC = () => {
     <>
       {/* Main blob cursor */}
       <motion.div
-        ref={cursorRef}
         className="fixed pointer-events-none z-50 mix-blend-difference"
         style={{
           x,
@@ -74,102 +82,53 @@ const CustomCursor: React.FC = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isClicking ? 0.6 : isHovering ? 1.8 : 1,
+          scale: isClicking ? 0.7 : isHovering ? 1.5 : 1,
         }}
         transition={{
           scale: {
             type: "spring",
-            stiffness: 400,
+            stiffness: 600,
             damping: 25,
-            mass: 0.3
+            mass: 0.1
           }
         }}
       >
-        {/* Outer blob with morphing animation */}
+        {/* Main blob */}
         <motion.div
-          className="relative w-8 h-8"
+          className="w-6 h-6 bg-gradient-to-br from-cyan-400 via-blue-400 to-purple-400 rounded-full relative"
           animate={{
-            rotate: [0, 360],
+            borderRadius: [
+              "50% 50% 50% 50%",
+              "60% 40% 60% 40%", 
+              "40% 60% 40% 60%",
+              "50% 50% 50% 50%"
+            ],
           }}
           transition={{
-            rotate: {
-              duration: 20,
+            borderRadius: {
+              duration: 2,
               repeat: Infinity,
-              ease: "linear"
+              ease: "easeInOut"
             }
           }}
         >
-          {/* Main blob shape */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-blue-400 to-purple-400 rounded-full"
-            animate={{
-              borderRadius: [
-                "50% 50% 50% 50%",
-                "60% 40% 60% 40%", 
-                "40% 60% 40% 60%",
-                "50% 50% 50% 50%"
-              ],
-              scale: isHovering ? [1, 1.1, 1] : [1, 1.05, 1],
-            }}
-            transition={{
-              borderRadius: {
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              },
-              scale: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }
-            }}
-          />
-          
           {/* Inner glow */}
           <motion.div
-            className="absolute inset-1 bg-white/30 rounded-full blur-sm"
+            className="absolute inset-0.5 bg-white/40 rounded-full blur-sm"
             animate={{
-              opacity: [0.3, 0.6, 0.3],
-              scale: [0.8, 1.2, 0.8],
+              opacity: [0.4, 0.8, 0.4],
+              scale: [0.8, 1.1, 0.8],
             }}
             transition={{
-              duration: 2.5,
+              duration: 1.5,
               repeat: Infinity,
               ease: "easeInOut"
             }}
           />
-          
-          {/* Sparkle effects when hovering */}
-          {isHovering && (
-            <>
-              {[...Array(6)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full"
-                  style={{
-                    left: '50%',
-                    top: '50%',
-                  }}
-                  animate={{
-                    x: [0, Math.cos(i * 60 * Math.PI / 180) * 20],
-                    y: [0, Math.sin(i * 60 * Math.PI / 180) * 20],
-                    opacity: [0, 1, 0],
-                    scale: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    delay: i * 0.1,
-                    ease: "easeOut"
-                  }}
-                />
-              ))}
-            </>
-          )}
         </motion.div>
       </motion.div>
 
-      {/* Trailing particles */}
+      {/* Trailing ring */}
       <motion.div
         className="fixed pointer-events-none z-40"
         style={{
@@ -179,64 +138,37 @@ const CustomCursor: React.FC = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isHovering ? 1.5 : 1,
-          opacity: isHovering ? 0.8 : 0.4,
+          scale: isHovering ? 1.2 : 1,
+          opacity: isHovering ? 0.6 : 0.3,
         }}
         transition={{
           type: "spring",
-          stiffness: 200,
-          damping: 20,
+          stiffness: 400,
+          damping: 30,
         }}
       >
-        {/* Outer ring */}
         <motion.div
-          className="w-16 h-16 border border-cyan-400/20 rounded-full"
+          className="w-8 h-8 border border-cyan-400/30 rounded-full"
           animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, -360],
-            borderRadius: [
-              "50% 50% 50% 50%",
-              "45% 55% 45% 55%",
-              "55% 45% 55% 45%",
-              "50% 50% 50% 50%"
-            ],
+            scale: [1, 1.1, 1],
+            rotate: [0, 360],
           }}
           transition={{
             scale: {
-              duration: 3,
+              duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
             },
             rotate: {
-              duration: 15,
+              duration: 8,
               repeat: Infinity,
               ease: "linear"
-            },
-            borderRadius: {
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
             }
-          }}
-        />
-        
-        {/* Inner pulse ring */}
-        <motion.div
-          className="absolute inset-2 border border-purple-400/30 rounded-full"
-          animate={{
-            scale: [0.8, 1.1, 0.8],
-            opacity: [0.3, 0.7, 0.3],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.5
           }}
         />
       </motion.div>
 
-      {/* Click ripple effect */}
+      {/* Click ripple */}
       {isClicking && (
         <motion.div
           className="fixed pointer-events-none z-30"
@@ -247,10 +179,10 @@ const CustomCursor: React.FC = () => {
             translateY: '-50%',
           }}
           initial={{ scale: 0, opacity: 0.8 }}
-          animate={{ scale: 3, opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          animate={{ scale: 4, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
-          <div className="w-8 h-8 border-2 border-cyan-400 rounded-full" />
+          <div className="w-6 h-6 border-2 border-cyan-400 rounded-full" />
         </motion.div>
       )}
     </>

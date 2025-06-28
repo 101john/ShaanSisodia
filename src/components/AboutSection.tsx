@@ -27,7 +27,7 @@ const AboutSection: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
@@ -45,7 +45,7 @@ const AboutSection: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
@@ -66,7 +66,7 @@ const AboutSection: React.FC = () => {
             <motion.blockquote
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.3, duration: 0.6 }}
               className="border-l-4 border-cyan-400 pl-6 py-4 bg-gray-900/50 rounded-r"
             >
@@ -76,45 +76,35 @@ const AboutSection: React.FC = () => {
             </motion.blockquote>
           </motion.div>
 
-          {/* Right side - Visual element */}
+          {/* Right side - Removed the large code block */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="relative w-full h-96 bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg overflow-hidden border border-cyan-500/20">
-              {/* Code-like visualization */}
-              <div className="absolute inset-0 p-6 font-mono text-sm">
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { title: 'Projects Built', value: '15+', color: 'cyan' },
+                { title: 'Languages', value: '8', color: 'purple' },
+                { title: 'Years Coding', value: '3+', color: 'blue' },
+                { title: 'Systems Focus', value: '100%', color: 'green' },
+              ].map((stat, index) => (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 2 }}
-                  className="space-y-2"
+                  key={stat.title}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: false }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="p-6 bg-gray-900/50 rounded-lg border border-gray-800 text-center"
                 >
-                  <div className="text-cyan-400">// System Architecture</div>
-                  <div className="text-gray-400">class <span className="text-purple-400">SystemBuilder</span> {'{'}</div>
-                  <div className="text-gray-400 ml-4">design() → <span className="text-green-400">scalable</span></div>
-                  <div className="text-gray-400 ml-4">implement() → <span className="text-green-400">efficient</span></div>
-                  <div className="text-gray-400 ml-4">optimize() → <span className="text-green-400">performant</span></div>
-                  <div className="text-gray-400">{'}'}</div>
+                  <div className={`text-3xl font-bold text-${stat.color}-400 mb-2`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-gray-400">{stat.title}</div>
                 </motion.div>
-              </div>
-              
-              {/* Animated grid overlay */}
-              <motion.div
-                animate={{ opacity: [0.1, 0.3, 0.1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)
-                  `,
-                  backgroundSize: '20px 20px'
-                }}
-              />
+              ))}
             </div>
           </motion.div>
         </div>
@@ -123,7 +113,7 @@ const AboutSection: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
@@ -132,7 +122,7 @@ const AboutSection: React.FC = () => {
               key={principle.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: index * 0.2, duration: 0.6 }}
               whileHover={{ y: -10, scale: 1.02 }}
               className="group p-8 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-cyan-500/50 transition-all duration-300"

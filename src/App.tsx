@@ -8,12 +8,16 @@ import TechStack from './components/TechStack';
 import ProjectsSection from './components/ProjectsSection';
 import ContactSection from './components/ContactSection';
 import TerminalOverlay from './components/TerminalOverlay';
+import FloatingParticles from './components/FloatingParticles';
 
 function App() {
   return (
     <div className="relative min-h-screen bg-gray-950 text-gray-100 overflow-x-hidden">
       {/* Matrix Rain Background */}
       <MatrixRain />
+      
+      {/* Floating Particles Throughout Site */}
+      <FloatingParticles />
       
       {/* Custom Cursor */}
       <CustomCursor />

@@ -25,10 +25,10 @@ const HeroSection: React.FC = () => {
         } else {
           clearInterval(timer);
           if (callback) {
-            timeout = setTimeout(callback, 1000);
+            timeout = setTimeout(callback, 1500);
           }
         }
-      }, 80);
+      }, 50); // Smoother, less typewriter-y
     };
 
     const cycle = () => {
@@ -43,6 +43,13 @@ const HeroSection: React.FC = () => {
       clearTimeout(timeout);
     };
   }, [currentPhase]);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
@@ -68,32 +75,8 @@ const HeroSection: React.FC = () => {
         />
       </div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [-20, 20, -20],
-              opacity: [0.2, 0.8, 0.2],
-              scale: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
-
       <div className="relative z-10 text-center max-w-6xl mx-auto">
-        {/* Main heading with typewriter effect */}
+        {/* Main heading with smoother typewriter effect */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -132,7 +115,7 @@ const HeroSection: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Action buttons */}
+        {/* Action buttons with proper navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -140,6 +123,7 @@ const HeroSection: React.FC = () => {
           className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
         >
           <motion.button
+            onClick={() => scrollToSection('projects')}
             whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(0, 255, 255, 0.3)' }}
             whileTap={{ scale: 0.95 }}
             className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-gray-900 font-semibold rounded-sm overflow-hidden interactive"
@@ -157,6 +141,7 @@ const HeroSection: React.FC = () => {
           </motion.button>
 
           <motion.button
+            onClick={() => scrollToSection('contact')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="group px-8 py-4 border border-cyan-500/50 text-cyan-400 font-semibold rounded-sm hover:bg-cyan-500/10 transition-all duration-200 interactive"
