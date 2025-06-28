@@ -10,7 +10,7 @@ const HeroSection: React.FC = () => {
   const phases = [
     'SHAAN SISODIA',
     'SYSTEMS ARCHITECT',
-    'CODE CRAFTSMAN'
+    'PROBLEM SOLVER'
   ];
 
   useEffect(() => {
