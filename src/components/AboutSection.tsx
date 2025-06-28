@@ -58,9 +58,6 @@ const AboutSection: React.FC = () => {
                 civilization simulations, or deploying full-stack web applications, I focus on 
                 systems that scale and interfaces that feel inevitable.
               </p>
-              <p className="text-lg text-gray-400 leading-relaxed">
-                Currently mastering: Linux internals, ML in Python, advanced system architecture
-              </p>
             </div>
 
             <motion.blockquote
@@ -71,12 +68,12 @@ const AboutSection: React.FC = () => {
               className="border-l-4 border-cyan-400 pl-6 py-4 bg-gray-900/50 rounded-r"
             >
               <p className="text-xl italic text-cyan-300 font-light">
-                "Code is a tool for bringing ideas to life."
+                "First, solve the problem. Then, write the code." - John Johnson
               </p>
             </motion.blockquote>
           </motion.div>
 
-          {/* Right side - Removed the large code block */}
+          {/* Right side - Stats Grid */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}

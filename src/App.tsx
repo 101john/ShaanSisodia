@@ -1,6 +1,6 @@
 import React from 'react';
 import MatrixRain from './components/MatrixRain';
-import CustomCursor from './components/CustomCursor';
+import BlobCursor from './components/BlobCursor';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
@@ -23,8 +23,25 @@ function App() {
       {/* Floating Particles Throughout Site */}
       <FloatingParticles />
       
-      {/* Custom Cursor */}
-      <CustomCursor />
+      {/* Blob Cursor */}
+      <BlobCursor
+        blobType="circle"
+        fillColor="#06b6d4"
+        trailCount={3}
+        sizes={[20, 35, 25]}
+        innerSizes={[8, 12, 10]}
+        innerColor="rgba(255,255,255,0.9)"
+        opacities={[0.8, 0.6, 0.4]}
+        shadowColor="rgba(6, 182, 212, 0.4)"
+        shadowBlur={8}
+        shadowOffsetX={0}
+        shadowOffsetY={0}
+        filterStdDeviation={15}
+        useFilter={true}
+        fastDuration={0.08}
+        slowDuration={0.25}
+        zIndex={100}
+      />
       
       {/* Navigation */}
       <Navigation />
