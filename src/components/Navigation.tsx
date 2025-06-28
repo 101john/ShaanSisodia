@@ -14,6 +14,10 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const navItems = [
     { name: 'About', href: '#about' },
     { name: 'Arsenal', href: '#tech' },
@@ -33,14 +37,15 @@ const Navigation: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <motion.div
+          {/* Logo - Now clickable to go to top */}
+          <motion.button
+            onClick={scrollToTop}
             whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center space-x-2 cursor-pointer interactive"
           >
             <Terminal className="w-6 h-6 text-cyan-400" />
             <span className="font-mono text-xl font-bold text-cyan-400">SS</span>
-          </motion.div>
+          </motion.button>
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">

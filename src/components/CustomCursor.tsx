@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const CustomCursor: React.FC = () => {
@@ -6,12 +6,11 @@ const CustomCursor: React.FC = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   
-  // Ultra-smooth motion values with optimized spring
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   
-  // Buttery smooth spring config
-  const springConfig = { damping: 30, stiffness: 800, mass: 0.1 };
+  // Smooth spring config
+  const springConfig = { damping: 25, stiffness: 400, mass: 0.5 };
   const x = useSpring(cursorX, springConfig);
   const y = useSpring(cursorY, springConfig);
 
@@ -19,7 +18,6 @@ const CustomCursor: React.FC = () => {
     let rafId: number;
     
     const updateCursorPosition = (e: MouseEvent) => {
-      // Use RAF for smooth updates
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         cursorX.set(e.clientX);
@@ -72,9 +70,9 @@ const CustomCursor: React.FC = () => {
 
   return (
     <>
-      {/* Main blob cursor */}
+      {/* Main cursor dot */}
       <motion.div
-        className="fixed pointer-events-none z-50 mix-blend-difference"
+        className="fixed pointer-events-none z-50"
         style={{
           x,
           y,
@@ -82,96 +80,34 @@ const CustomCursor: React.FC = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isClicking ? 0.7 : isHovering ? 1.5 : 1,
+          scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
         }}
         transition={{
           scale: {
             type: "spring",
-            stiffness: 600,
-            damping: 25,
-            mass: 0.1
+            stiffness: 500,
+            damping: 30,
+            mass: 0.2
           }
         }}
       >
-        {/* Main blob */}
-        <motion.div
-          className="w-6 h-6 bg-gradient-to-br from-cyan-400 via-blue-400 to-purple-400 rounded-full relative"
-          animate={{
-            borderRadius: [
-              "50% 50% 50% 50%",
-              "60% 40% 60% 40%", 
-              "40% 60% 40% 60%",
-              "50% 50% 50% 50%"
-            ],
-          }}
-          transition={{
-            borderRadius: {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }
-          }}
-        >
-          {/* Inner glow */}
+        {/* Outer ring for contrast */}
+        <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center shadow-lg">
+          {/* Inner dot */}
           <motion.div
-            className="absolute inset-0.5 bg-white/40 rounded-full blur-sm"
+            className="w-3 h-3 bg-cyan-400 rounded-full"
             animate={{
-              opacity: [0.4, 0.8, 0.4],
-              scale: [0.8, 1.1, 0.8],
+              backgroundColor: isHovering ? '#06b6d4' : '#22d3ee',
             }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            transition={{ duration: 0.2 }}
           />
-        </motion.div>
+        </div>
       </motion.div>
 
-      {/* Trailing ring */}
-      <motion.div
-        className="fixed pointer-events-none z-40"
-        style={{
-          x,
-          y,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: isHovering ? 1.2 : 1,
-          opacity: isHovering ? 0.6 : 0.3,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
-        }}
-      >
-        <motion.div
-          className="w-8 h-8 border border-cyan-400/30 rounded-full"
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, 360],
-          }}
-          transition={{
-            scale: {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            },
-            rotate: {
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear"
-            }
-          }}
-        />
-      </motion.div>
-
-      {/* Click ripple */}
+      {/* Click ripple effect */}
       {isClicking && (
         <motion.div
-          className="fixed pointer-events-none z-30"
+          className="fixed pointer-events-none z-40"
           style={{
             x,
             y,
@@ -179,7 +115,7 @@ const CustomCursor: React.FC = () => {
             translateY: '-50%',
           }}
           initial={{ scale: 0, opacity: 0.8 }}
-          animate={{ scale: 4, opacity: 0 }}
+          animate={{ scale: 3, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <div className="w-6 h-6 border-2 border-cyan-400 rounded-full" />
