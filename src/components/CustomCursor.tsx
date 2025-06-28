@@ -6,15 +6,21 @@ const CustomCursor: React.FC = () => {
   const [isClicking, setIsClicking] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef({ x: 0, y: 0 });
+  const targetRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>();
 
   useEffect(() => {
     const updateCursorPosition = (e: MouseEvent) => {
-      positionRef.current = { x: e.clientX, y: e.clientY };
+      targetRef.current = { x: e.clientX, y: e.clientY };
       setIsVisible(true);
     };
 
     const animateCursor = () => {
+      // Smooth interpolation for buttery movement
+      const lerp = 0.15;
+      positionRef.current.x += (targetRef.current.x - positionRef.current.x) * lerp;
+      positionRef.current.y += (targetRef.current.y - positionRef.current.y) * lerp;
+
       if (cursorRef.current) {
         const { x, y } = positionRef.current;
         cursorRef.current.style.transform = `translate3d(${x - 12}px, ${y - 12}px, 0)`;
@@ -24,14 +30,24 @@ const CustomCursor: React.FC = () => {
 
     const handleMouseEnter = (e: Event) => {
       const target = e.target as Element;
-      if (target?.closest?.('button, a, .interactive, input, textarea, [role="button"]')) {
+      // More specific targeting to avoid glitches
+      if (target && (
+        target.tagName === 'BUTTON' ||
+        target.tagName === 'A' ||
+        target.hasAttribute('role') && target.getAttribute('role') === 'button' ||
+        target.classList.contains('interactive') ||
+        target.closest('button, a, [role="button"], .interactive')
+      )) {
         setIsHovering(true);
       }
     };
 
     const handleMouseLeave = (e: Event) => {
       const target = e.target as Element;
-      if (target?.closest?.('button, a, .interactive, input, textarea, [role="button"]')) {
+      const relatedTarget = (e as MouseEvent).relatedTarget as Element;
+      
+      // Only set hovering to false if we're actually leaving the interactive element
+      if (target && !relatedTarget?.closest('button, a, [role="button"], .interactive')) {
         setIsHovering(false);
       }
     };
@@ -69,21 +85,22 @@ const CustomCursor: React.FC = () => {
       {/* Main cursor */}
       <div
         ref={cursorRef}
-        className="fixed pointer-events-none z-50 transition-transform duration-75 ease-out"
+        className="fixed pointer-events-none z-50"
         style={{
           width: '24px',
           height: '24px',
           transform: `scale(${isClicking ? 0.8 : isHovering ? 1.5 : 1})`,
-          transition: 'transform 0.15s ease-out',
+          transition: 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
       >
         {/* Outer ring for contrast */}
-        <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center shadow-lg">
+        <div className="w-6 h-6 border-2 border-white rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm">
           {/* Inner dot */}
           <div
-            className="w-3 h-3 rounded-full transition-colors duration-200"
+            className="w-3 h-3 rounded-full transition-all duration-200"
             style={{
               backgroundColor: isHovering ? '#06b6d4' : '#22d3ee',
+              boxShadow: isHovering ? '0 0 10px #06b6d4' : '0 0 5px #22d3ee',
             }}
           />
         </div>

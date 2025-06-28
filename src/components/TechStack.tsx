@@ -51,19 +51,19 @@ const TechStack: React.FC = () => {
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mt-8" />
         </motion.div>
 
-        {/* Interactive Cubes Background */}
+        {/* Interactive Cubes - Smaller and more subtle */}
         <div className="flex justify-center mb-16">
           <Cubes
-            gridSize={8}
-            cubeSize={40}
-            maxAngle={35}
-            radius={2.5}
-            cellGap={8}
-            borderStyle="1px solid rgba(6, 182, 212, 0.3)"
-            faceColor="rgba(15, 23, 42, 0.8)"
-            shadow="0 0 10px rgba(6, 182, 212, 0.2)"
-            rippleColor="#06b6d4"
-            rippleSpeed={1.5}
+            gridSize={6}
+            cubeSize={50}
+            maxAngle={45}
+            radius={2}
+            cellGap={12}
+            borderStyle="1px solid rgba(6, 182, 212, 0.2)"
+            faceColor="rgba(15, 23, 42, 0.6)"
+            shadow="0 0 8px rgba(6, 182, 212, 0.15)"
+            rippleColor="rgba(6, 182, 212, 0.3)"
+            rippleSpeed={1.2}
           />
         </div>
 
