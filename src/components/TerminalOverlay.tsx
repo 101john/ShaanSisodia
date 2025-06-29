@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Terminal } from 'lucide-react';
+import { RetroOS } from './RetroOS/RetroOS';
 
 const TerminalOverlay: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,7 @@ const TerminalOverlay: React.FC = () => {
     { type: 'output', text: '' }
   ]);
   const [isBooting, setIsBooting] = useState(false);
+  const [showRetroOS, setShowRetroOS] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -19,13 +21,13 @@ const TerminalOverlay: React.FC = () => {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 't' || e.key === 'T') {
-        if (!isOpen && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        if (!isOpen && !showRetroOS && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
           e.preventDefault();
           setIsOpen(true);
         }
       }
       
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape' && isOpen && !showRetroOS) {
         setIsOpen(false);
       }
     };
@@ -33,7 +35,7 @@ const TerminalOverlay: React.FC = () => {
     // Listen for 'hack' sequence
     let sequence = '';
     const handleSequence = (e: KeyboardEvent) => {
-      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA' || showRetroOS) {
         return;
       }
       
@@ -56,14 +58,14 @@ const TerminalOverlay: React.FC = () => {
       window.removeEventListener('keydown', handleKeyPress);
       window.removeEventListener('keydown', handleSequence);
     };
-  }, [isOpen]);
+  }, [isOpen, showRetroOS]);
 
   // Focus input when terminal opens
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && !showRetroOS) {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, showRetroOS]);
 
   // Scroll to bottom when output changes
   useEffect(() => {
@@ -77,32 +79,30 @@ const TerminalOverlay: React.FC = () => {
     setOutput(prev => [...prev,
       { type: 'command', text: '$ hack --init-retro-os' },
       { type: 'output', text: '' },
-      { type: 'output', text: 'INITIATING SYSTEM BREACH...' },
+      { type: 'output', text: '🚨 INITIATING SYSTEM BREACH...' },
       { type: 'output', text: 'Bypassing security protocols...' },
       { type: 'output', text: 'Accessing core systems...' },
+      { type: 'output', text: 'Injecting retro OS payload...' },
       { type: 'output', text: '' },
       { type: 'error', text: 'WARNING: UNAUTHORIZED ACCESS DETECTED' },
       { type: 'error', text: 'SYSTEM INTEGRITY COMPROMISED' },
+      { type: 'error', text: 'PORTFOLIO FIREWALL BREACHED' },
       { type: 'output', text: '' },
       { type: 'output', text: 'Loading ShaanOS v2.1...' },
-      { type: 'output', text: 'Booting into retro terminal interface...' },
+      { type: 'output', text: 'Initializing retro terminal interface...' },
+      { type: 'output', text: 'Mounting file systems...' },
+      { type: 'output', text: 'Starting kernel modules...' },
       { type: 'output', text: '' },
-      { type: 'output', text: 'BOOT SEQUENCE INITIATED' },
-      { type: 'output', text: 'This will take a few seconds...' }
+      { type: 'output', text: '🔥 BOOT SEQUENCE INITIATED' },
+      { type: 'output', text: 'Preparing to enter the matrix...' }
     ]);
 
     // Simulate boot delay then trigger the actual OS boot
     setTimeout(() => {
-      // Here we'll trigger the actual retro OS boot
-      // For now, just show a message
-      setOutput(prev => [...prev,
-        { type: 'output', text: '' },
-        { type: 'output', text: '🚀 RETRO OS BOOT COMING SOON...' },
-        { type: 'output', text: 'This will be the most insane terminal OS ever built!' },
-        { type: 'output', text: '' }
-      ]);
+      setShowRetroOS(true);
+      setIsOpen(false);
       setIsBooting(false);
-    }, 3000);
+    }, 4000);
   };
 
   const executeCommand = (cmd: string) => {
@@ -130,7 +130,7 @@ const TerminalOverlay: React.FC = () => {
           { type: 'output', text: '  projects - List projects' },
           { type: 'output', text: '  skills   - Show technical skills' },
           { type: 'output', text: '  contact  - Contact information' },
-          { type: 'output', text: '  hack     - Boot into retro OS (🔥 NEW!)' },
+          { type: 'output', text: '  hack     - 🔥 Boot into ShaanOS (LEGENDARY!)' },
           { type: 'output', text: '  clear    - Clear terminal' },
           { type: 'output', text: '  exit     - Close terminal' },
           { type: 'output', text: '' }
@@ -211,7 +211,7 @@ const TerminalOverlay: React.FC = () => {
         setOutput(prev => [...prev,
           { type: 'error', text: `Command not found: ${command}` },
           { type: 'output', text: 'Type "help" for available commands.' },
-          { type: 'output', text: 'Or try "hack" to boot into the retro OS! 🔥' },
+          { type: 'output', text: 'Or try "hack" to boot into ShaanOS! 🔥' },
           { type: 'output', text: '' }
         ]);
     }
@@ -224,6 +224,18 @@ const TerminalOverlay: React.FC = () => {
       executeCommand(input);
     }
   };
+
+  if (showRetroOS) {
+    return (
+      <RetroOS 
+        isActive={showRetroOS} 
+        onExit={() => {
+          setShowRetroOS(false);
+          setIsOpen(false);
+        }} 
+      />
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -298,7 +310,7 @@ const TerminalOverlay: React.FC = () => {
                     onKeyDown={handleKeyDown}
                     disabled={isBooting}
                     className="flex-1 bg-transparent text-gray-100 font-mono text-sm outline-none disabled:opacity-50"
-                    placeholder={isBooting ? "Booting..." : "Type a command..."}
+                    placeholder={isBooting ? "Booting into ShaanOS..." : "Type a command..."}
                   />
                   {!isBooting && (
                     <motion.span
