@@ -21,7 +21,7 @@ const ProjectsSection: React.FC = () => {
     {
       id: 'os',
       title: 'ShaanOS',
-      description: 'Custom x86 operating system kernel built from scratch',
+      description: 'Custom x86 operating system kernel built from scratch in C and Assembly',
       longDescription: 'A complete x86 operating system implementation featuring memory management, process scheduling, interrupt handling, and basic I/O operations. Built entirely in C and Assembly with support for VGA text mode, keyboard input, ATA disk operations, and FAT12 file system. Includes a custom bootloader, physical/virtual memory managers, and a kernel shell for testing.',
       tech: ['C', 'Assembly', 'x86 Architecture', 'Low-level Programming', 'QEMU'],
       image: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg',
@@ -31,7 +31,7 @@ const ProjectsSection: React.FC = () => {
     {
       id: 'civsim',
       title: 'CivSim - Civilization Simulator',
-      description: 'Real-time civilization simulation with AI-generated lore',
+      description: 'Real-time civilization simulation with AI-generated lore and complex population dynamics',
       longDescription: 'A sophisticated Python/Pygame civilization simulation modeling population growth, territorial expansion, warfare, and diplomacy. Features realistic demographic transitions, OpenAI GPT integration for dynamic lore generation, and detailed visualization of civilization interactions. Includes God Mode, variable simulation speeds, and rich UI for exploring civilization details.',
       tech: ['Python', 'Pygame', 'NumPy', 'OpenAI API', 'AI Integration', 'Simulation'],
       image: 'https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg',
@@ -41,7 +41,7 @@ const ProjectsSection: React.FC = () => {
     {
       id: 'dailyglitch',
       title: 'Daily Glitch',
-      description: 'Full-stack mystery story platform with modern web architecture',
+      description: 'Full-stack mystery story platform with modern web architecture and dark aesthetics',
       longDescription: 'A sophisticated web platform delivering daily mysterious stories and unexplained phenomena. Built with React, Next.js, and Supabase, featuring a responsive dark theme, search functionality, archive system, and newsletter integration. Includes a CLI tool for content management and modern deployment pipeline.',
       tech: ['React', 'Next.js', 'Supabase', 'TypeScript', 'TailwindCSS', 'PostgreSQL'],
       image: 'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg',
@@ -52,7 +52,7 @@ const ProjectsSection: React.FC = () => {
     {
       id: 'ardenvale',
       title: 'Ardenvale RPG',
-      description: 'Complex text-based Dark Souls-inspired RPG with deep mechanics',
+      description: 'Complex text-based Dark Souls-inspired RPG with deep mechanics and rich world',
       longDescription: 'A sophisticated text-based fantasy RPG inspired by Dark Souls, featuring strategic turn-based combat, character progression, quest systems, and rich world exploration. Includes over 15 unique locations across 4 regions, beacon fast-travel system, NPC dialogue trees, inventory management, and save/load functionality. Built with modular Python architecture for expandability.',
       tech: ['Python', 'Object-oriented Design', 'Game Logic', 'ASCII Art', 'Save Systems'],
       image: 'https://images.pexels.com/photos/158826/structure-light-led-movement-158826.jpeg',

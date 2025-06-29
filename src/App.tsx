@@ -25,7 +25,7 @@ function App() {
       {/* Navigation */}
       <Navigation />
       
-      {/* Terminal Overlay */}
+      {/* Terminal Overlay - THIS IS THE KEY! */}
       <TerminalOverlay />
       
       {/* Main Content */}
