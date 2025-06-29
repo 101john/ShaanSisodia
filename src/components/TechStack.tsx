@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Cubes from './Cubes';
 
 const TechStack: React.FC = () => {
   const techCategories = [
@@ -23,7 +22,7 @@ const TechStack: React.FC = () => {
         { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql', color: '#336791' },
         { name: 'Git', icon: 'https://cdn.simpleicons.org/git', color: '#F05032' },
         { name: 'GDB', icon: 'https://cdn.simpleicons.org/gnu', color: '#A42E2B' },
-        { name: 'Valgrind', icon: 'https://cdn.simpleicons.org/linux', color: '#FCC624' },
+        { name: 'Valgrind', icon: 'https://cdn.simpleicons.org/valgrind', color: '#FF6B35' },
         { name: 'QEMU', icon: 'https://cdn.simpleicons.org/qemu', color: '#FF6600' },
         { name: 'Vim', icon: 'https://cdn.simpleicons.org/vim', color: '#019733' },
       ]
@@ -50,22 +49,6 @@ const TechStack: React.FC = () => {
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mt-8" />
         </motion.div>
-
-        {/* Interactive Cubes - Smaller and more subtle */}
-        <div className="flex justify-center mb-16">
-          <Cubes
-            gridSize={6}
-            cubeSize={50}
-            maxAngle={45}
-            radius={2}
-            cellGap={12}
-            borderStyle="1px solid rgba(6, 182, 212, 0.2)"
-            faceColor="rgba(15, 23, 42, 0.6)"
-            shadow="0 0 8px rgba(6, 182, 212, 0.15)"
-            rippleColor="rgba(6, 182, 212, 0.3)"
-            rippleSpeed={1.2}
-          />
-        </div>
 
         {/* Tech Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -99,9 +82,12 @@ const TechStack: React.FC = () => {
                     whileHover={{ 
                       scale: 1.05, 
                       y: -5,
-                      boxShadow: `0 10px 30px ${item.color}20`
+                      transition: { duration: 0.2, ease: "easeOut" }
                     }}
-                    className="group p-6 bg-gray-900/30 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 text-center interactive"
+                    className="group p-6 bg-gray-900/30 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 text-center will-change-transform"
+                    style={{
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }}
                   >
                     <div className="flex flex-col items-center space-y-3">
                       <div 
@@ -118,6 +104,7 @@ const TechStack: React.FC = () => {
                           style={{ 
                             filter: item.name === 'Rust' || item.name === 'GDB' ? 'invert(1)' : 'none' 
                           }}
+                          loading="lazy"
                         />
                       </div>
                       <h4 className="text-sm font-semibold text-gray-100 group-hover:text-cyan-400 transition-colors duration-200">
@@ -161,12 +148,17 @@ const TechStack: React.FC = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: false }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
-                whileHover={{ scale: 1.1, y: -5 }}
-                className="px-6 py-3 rounded-full border transition-all duration-200 cursor-default interactive"
+                whileHover={{ 
+                  scale: 1.1, 
+                  y: -5,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                className="px-6 py-3 rounded-full border transition-all duration-200 cursor-default will-change-transform"
                 style={{
                   backgroundColor: `${tech.color}15`,
                   borderColor: `${tech.color}30`,
-                  color: tech.color
+                  color: tech.color,
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                 }}
               >
                 {tech.name}

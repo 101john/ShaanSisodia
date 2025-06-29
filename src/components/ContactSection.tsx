@@ -81,10 +81,13 @@ const ContactSection: React.FC = () => {
                   whileHover={{ 
                     y: -8, 
                     scale: 1.02,
-                    boxShadow: '0 20px 40px rgba(6, 182, 212, 0.15)'
+                    transition: { duration: 0.2, ease: "easeOut" }
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className={`group relative p-8 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 text-center overflow-hidden ${link.color}`}
+                  className={`group relative p-8 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 text-center overflow-hidden will-change-transform ${link.color}`}
+                  style={{
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                  }}
                 >
                   {/* Background glow effect */}
                   <motion.div
@@ -96,8 +99,10 @@ const ContactSection: React.FC = () => {
                   <div className="relative z-10">
                     <motion.div 
                       className="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
-                      whileHover={{ rotate: [0, -10, 10, 0] }}
-                      transition={{ duration: 0.5 }}
+                      whileHover={{ 
+                        rotate: [0, -10, 10, 0],
+                        transition: { duration: 0.5, ease: "easeInOut" }
+                      }}
                     >
                       <link.icon className="w-8 h-8 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300" />
                     </motion.div>

@@ -3,7 +3,6 @@ import gsap from "gsap";
 
 const BackgroundCubes: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const userActiveRef = useRef(false);
   const simPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -11,7 +10,7 @@ const BackgroundCubes: React.FC = () => {
   const simRAFRef = useRef<number | null>(null);
 
   const gridSize = 12;
-  const maxAngle = 75; // Increased rotation
+  const maxAngle = 75;
   const radius = 4;
 
   const tiltAt = useCallback(
@@ -27,7 +26,7 @@ const BackgroundCubes: React.FC = () => {
             const pct = 1 - dist / radius;
             const angle = pct * maxAngle;
             gsap.to(cube, {
-              duration: 0.2, // Faster response
+              duration: 0.15, // Even faster for instant feel
               ease: "power2.out",
               overwrite: true,
               rotateX: -angle,
@@ -36,7 +35,7 @@ const BackgroundCubes: React.FC = () => {
             });
           } else {
             gsap.to(cube, {
-              duration: 0.6,
+              duration: 0.5,
               ease: "power2.out",
               overwrite: true,
               rotateX: 0,
@@ -60,7 +59,7 @@ const BackgroundCubes: React.FC = () => {
       const colCenter = (e.clientX - rect.left) / cellW;
       const rowCenter = (e.clientY - rect.top) / cellH;
 
-      // Immediate response - no RAF delay
+      // Immediate response - no delay
       tiltAt(rowCenter, colCenter);
 
       idleTimerRef.current = setTimeout(() => {
@@ -108,22 +107,22 @@ const BackgroundCubes: React.FC = () => {
         .map(Number)
         .sort((a, b) => a - b)
         .forEach((ring) => {
-          const delay = ring * 0.05; // Faster ripple
+          const delay = ring * 0.04; // Even faster ripple
           const faces = rings[ring].flatMap((cube) =>
             Array.from(cube.querySelectorAll<HTMLElement>(".bg-cube-face"))
           );
 
           // Very subtle dark ripple
           gsap.to(faces, {
-            backgroundColor: "rgba(6, 182, 212, 0.08)", // Much more subtle
-            duration: 0.2,
+            backgroundColor: "rgba(6, 182, 212, 0.06)", // Even more subtle
+            duration: 0.15,
             delay,
             ease: "power2.out",
           });
           gsap.to(faces, {
             backgroundColor: "rgba(15, 23, 42, 0.3)",
-            duration: 0.3,
-            delay: delay + 0.2,
+            duration: 0.25,
+            delay: delay + 0.15,
             ease: "power2.out",
           });
         });
@@ -174,7 +173,6 @@ const BackgroundCubes: React.FC = () => {
       el.removeEventListener("pointermove", onPointerMove);
       el.removeEventListener("pointerleave", resetAll);
       el.removeEventListener("click", onClick);
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, [onPointerMove, resetAll, onClick]);
@@ -182,7 +180,7 @@ const BackgroundCubes: React.FC = () => {
   const cells = Array.from({ length: gridSize });
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 opacity-40">
+    <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
       <div
         ref={sceneRef}
         className="grid w-full h-full pointer-events-auto"

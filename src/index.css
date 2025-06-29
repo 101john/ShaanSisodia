@@ -19,7 +19,7 @@ body {
   color: #f9fafb;
   overflow-x: hidden;
   line-height: 1.6;
-  cursor: auto; /* Default cursor */
+  cursor: auto;
 }
 
 /* Custom scrollbar */
@@ -66,11 +66,19 @@ textarea:focus-visible {
   cursor: pointer;
 }
 
-/* Smooth transitions */
+/* Smooth transitions for better performance */
 * {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+/* Hardware acceleration for smooth animations */
+.will-change-transform {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Custom animations */
