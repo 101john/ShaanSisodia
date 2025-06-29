@@ -3,16 +3,15 @@ import gsap from "gsap";
 
 const BackgroundCubes: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const userActiveRef = useRef(false);
   const simPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const simTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const simRAFRef = useRef<number | null>(null);
 
-  const gridSize = 12;
-  const maxAngle = 75; // Increased rotation
-  const radius = 4;
+  const gridSize = 8; // Fewer cubes for larger size
+  const maxAngle = 45;
+  const radius = 3;
 
   const tiltAt = useCallback(
     (rowCenter: number, colCenter: number) => {
@@ -27,16 +26,16 @@ const BackgroundCubes: React.FC = () => {
             const pct = 1 - dist / radius;
             const angle = pct * maxAngle;
             gsap.to(cube, {
-              duration: 0.2, // Faster response
+              duration: 0.3,
               ease: "power2.out",
               overwrite: true,
-              rotateX: -angle,
-              rotateY: angle,
-              rotateZ: angle * 0.3,
+              rotateX: -angle * 0.7,
+              rotateY: angle * 0.7,
+              rotateZ: angle * 0.2,
             });
           } else {
             gsap.to(cube, {
-              duration: 0.6,
+              duration: 0.8,
               ease: "power2.out",
               overwrite: true,
               rotateX: 0,
@@ -60,7 +59,6 @@ const BackgroundCubes: React.FC = () => {
       const colCenter = (e.clientX - rect.left) / cellW;
       const rowCenter = (e.clientY - rect.top) / cellH;
 
-      // Immediate response - no RAF delay
       tiltAt(rowCenter, colCenter);
 
       idleTimerRef.current = setTimeout(() => {
@@ -74,7 +72,7 @@ const BackgroundCubes: React.FC = () => {
     if (!sceneRef.current) return;
     sceneRef.current.querySelectorAll<HTMLDivElement>(".bg-cube").forEach((cube) =>
       gsap.to(cube, {
-        duration: 1,
+        duration: 1.2,
         rotateX: 0,
         rotateY: 0,
         rotateZ: 0,
@@ -108,21 +106,21 @@ const BackgroundCubes: React.FC = () => {
         .map(Number)
         .sort((a, b) => a - b)
         .forEach((ring) => {
-          const delay = ring * 0.05; // Faster ripple
-          const faces = rings[ring].flatMap((cube) =>
-            Array.from(cube.querySelectorAll<HTMLElement>(".bg-cube-face"))
+          const delay = ring * 0.08;
+          const edges = rings[ring].flatMap((cube) =>
+            Array.from(cube.querySelectorAll<HTMLElement>(".cube-edge"))
           );
 
-          // Very subtle dark ripple
-          gsap.to(faces, {
-            backgroundColor: "rgba(6, 182, 212, 0.08)", // Much more subtle
+          // Subtle ripple effect on the wireframe edges
+          gsap.to(edges, {
+            borderColor: "rgba(6, 182, 212, 0.4)",
             duration: 0.2,
             delay,
             ease: "power2.out",
           });
-          gsap.to(faces, {
-            backgroundColor: "rgba(15, 23, 42, 0.3)",
-            duration: 0.3,
+          gsap.to(edges, {
+            borderColor: "rgba(6, 182, 212, 0.08)",
+            duration: 0.6,
             delay: delay + 0.2,
             ease: "power2.out",
           });
@@ -141,7 +139,7 @@ const BackgroundCubes: React.FC = () => {
       x: Math.random() * gridSize,
       y: Math.random() * gridSize,
     };
-    const speed = 0.015;
+    const speed = 0.01; // Slower auto-animation
     const loop = () => {
       if (!userActiveRef.current) {
         const pos = simPosRef.current;
@@ -174,7 +172,6 @@ const BackgroundCubes: React.FC = () => {
       el.removeEventListener("pointermove", onPointerMove);
       el.removeEventListener("pointerleave", resetAll);
       el.removeEventListener("click", onClick);
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, [onPointerMove, resetAll, onClick]);
@@ -182,16 +179,16 @@ const BackgroundCubes: React.FC = () => {
   const cells = Array.from({ length: gridSize });
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 opacity-40">
+    <div className="fixed inset-0 pointer-events-none z-0 opacity-25">
       <div
         ref={sceneRef}
         className="grid w-full h-full pointer-events-auto"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
           gridTemplateRows: `repeat(${gridSize}, 1fr)`,
-          columnGap: '2px',
-          rowGap: '2px',
+          gap: '8px',
           perspective: "2000px",
+          padding: '20px',
         }}
       >
         {cells.map((_, r) =>
@@ -201,54 +198,149 @@ const BackgroundCubes: React.FC = () => {
               className="bg-cube relative w-full h-full [transform-style:preserve-3d]"
               data-row={r}
               data-col={c}
+              style={{ minHeight: '80px' }}
             >
-              {/* 6 faces of the cube */}
+              {/* Wireframe cube edges - 12 edges total */}
+              
+              {/* Front face edges */}
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.3)",
-                  border: "1px solid rgba(6, 182, 212, 0.1)",
-                  transform: "translateZ(25px)",
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.08))',
+                  transform: 'translateZ(40px)',
                 }}
               />
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.2)",
-                  border: "1px solid rgba(6, 182, 212, 0.08)",
-                  transform: "translateZ(-25px) rotateY(180deg)",
+                  left: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.08))',
+                  transform: 'translateZ(40px)',
                 }}
               />
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.25)",
-                  border: "1px solid rgba(6, 182, 212, 0.09)",
-                  transform: "rotateY(-90deg) translateZ(25px)",
+                  left: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '100%',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.08))',
+                  transform: 'translateZ(40px)',
                 }}
               />
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.25)",
-                  border: "1px solid rgba(6, 182, 212, 0.09)",
-                  transform: "rotateY(90deg) translateZ(25px)",
+                  right: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '100%',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.08))',
+                  transform: 'translateZ(40px)',
+                }}
+              />
+
+              {/* Back face edges */}
+              <div
+                className="cube-edge absolute"
+                style={{
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, rgba(6, 182, 212, 0.04), rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.04))',
+                  transform: 'translateZ(-40px)',
                 }}
               />
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.2)",
-                  border: "1px solid rgba(6, 182, 212, 0.08)",
-                  transform: "rotateX(90deg) translateZ(25px)",
+                  left: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, rgba(6, 182, 212, 0.04), rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.04))',
+                  transform: 'translateZ(-40px)',
                 }}
               />
               <div
-                className="bg-cube-face absolute inset-0"
+                className="cube-edge absolute"
                 style={{
-                  background: "rgba(15, 23, 42, 0.2)",
-                  border: "1px solid rgba(6, 182, 212, 0.08)",
-                  transform: "rotateX(-90deg) translateZ(25px)",
+                  left: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '100%',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.04), rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.04))',
+                  transform: 'translateZ(-40px)',
+                }}
+              />
+              <div
+                className="cube-edge absolute"
+                style={{
+                  right: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '100%',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.04), rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.04))',
+                  transform: 'translateZ(-40px)',
+                }}
+              />
+
+              {/* Connecting edges (front to back) */}
+              <div
+                className="cube-edge absolute"
+                style={{
+                  left: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '80px',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.06), rgba(6, 182, 212, 0.12), rgba(6, 182, 212, 0.06))',
+                  transform: 'rotateY(-90deg) translateZ(40px)',
+                  transformOrigin: 'left center',
+                }}
+              />
+              <div
+                className="cube-edge absolute"
+                style={{
+                  right: 0,
+                  top: 0,
+                  width: '2px',
+                  height: '80px',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.06), rgba(6, 182, 212, 0.12), rgba(6, 182, 212, 0.06))',
+                  transform: 'rotateY(90deg) translateZ(40px)',
+                  transformOrigin: 'right center',
+                }}
+              />
+              <div
+                className="cube-edge absolute"
+                style={{
+                  left: 0,
+                  bottom: 0,
+                  width: '2px',
+                  height: '80px',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.06), rgba(6, 182, 212, 0.12), rgba(6, 182, 212, 0.06))',
+                  transform: 'rotateY(-90deg) translateZ(40px)',
+                  transformOrigin: 'left center',
+                }}
+              />
+              <div
+                className="cube-edge absolute"
+                style={{
+                  right: 0,
+                  bottom: 0,
+                  width: '2px',
+                  height: '80px',
+                  background: 'linear-gradient(180deg, rgba(6, 182, 212, 0.06), rgba(6, 182, 212, 0.12), rgba(6, 182, 212, 0.06))',
+                  transform: 'rotateY(90deg) translateZ(40px)',
+                  transformOrigin: 'right center',
                 }}
               />
             </div>
