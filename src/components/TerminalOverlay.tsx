@@ -11,6 +11,7 @@ const TerminalOverlay: React.FC = () => {
     { type: 'output', text: 'Type "help" for available commands' },
     { type: 'output', text: '' }
   ]);
+  const [isBooting, setIsBooting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +72,39 @@ const TerminalOverlay: React.FC = () => {
     }
   }, [output]);
 
+  const bootIntoRetroOS = () => {
+    setIsBooting(true);
+    setOutput(prev => [...prev,
+      { type: 'command', text: '$ hack --init-retro-os' },
+      { type: 'output', text: '' },
+      { type: 'output', text: 'INITIATING SYSTEM BREACH...' },
+      { type: 'output', text: 'Bypassing security protocols...' },
+      { type: 'output', text: 'Accessing core systems...' },
+      { type: 'output', text: '' },
+      { type: 'error', text: 'WARNING: UNAUTHORIZED ACCESS DETECTED' },
+      { type: 'error', text: 'SYSTEM INTEGRITY COMPROMISED' },
+      { type: 'output', text: '' },
+      { type: 'output', text: 'Loading ShaanOS v2.1...' },
+      { type: 'output', text: 'Booting into retro terminal interface...' },
+      { type: 'output', text: '' },
+      { type: 'output', text: 'BOOT SEQUENCE INITIATED' },
+      { type: 'output', text: 'This will take a few seconds...' }
+    ]);
+
+    // Simulate boot delay then trigger the actual OS boot
+    setTimeout(() => {
+      // Here we'll trigger the actual retro OS boot
+      // For now, just show a message
+      setOutput(prev => [...prev,
+        { type: 'output', text: '' },
+        { type: 'output', text: '🚀 RETRO OS BOOT COMING SOON...' },
+        { type: 'output', text: 'This will be the most insane terminal OS ever built!' },
+        { type: 'output', text: '' }
+      ]);
+      setIsBooting(false);
+    }, 3000);
+  };
+
   const executeCommand = (cmd: string) => {
     const command = cmd.trim().toLowerCase();
     
@@ -79,6 +113,13 @@ const TerminalOverlay: React.FC = () => {
     
     // Add command to output
     setOutput(prev => [...prev, { type: 'command', text: `$ ${cmd}` }]);
+
+    // Check for boot command first
+    if (command === 'hack' || command === 'hack --init-retro-os' || command === 'boot retro-os') {
+      bootIntoRetroOS();
+      setInput('');
+      return;
+    }
 
     switch (command) {
       case 'help':
@@ -89,6 +130,7 @@ const TerminalOverlay: React.FC = () => {
           { type: 'output', text: '  projects - List projects' },
           { type: 'output', text: '  skills   - Show technical skills' },
           { type: 'output', text: '  contact  - Contact information' },
+          { type: 'output', text: '  hack     - Boot into retro OS (🔥 NEW!)' },
           { type: 'output', text: '  clear    - Clear terminal' },
           { type: 'output', text: '  exit     - Close terminal' },
           { type: 'output', text: '' }
@@ -114,10 +156,12 @@ const TerminalOverlay: React.FC = () => {
         setOutput(prev => [...prev,
           { type: 'output', text: 'Featured Projects:' },
           { type: 'output', text: '=================' },
-          { type: 'output', text: '1. Custom OS - Built from scratch in C/Assembly' },
-          { type: 'output', text: '2. CivSim - Real-time civilization simulator' },
-          { type: 'output', text: '3. Daily Glitch - Full-stack story platform' },
-          { type: 'output', text: '4. Ardenvale RPG - Complex text-based RPG' },
+          { type: 'output', text: '1. ShaanOS - Custom x86 operating system kernel' },
+          { type: 'output', text: '2. CivSim - Real-time civilization simulator with AI' },
+          { type: 'output', text: '3. Daily Glitch - Full-stack mystery story platform' },
+          { type: 'output', text: '4. Ardenvale RPG - Complex text-based Dark Souls RPG' },
+          { type: 'output', text: '' },
+          { type: 'output', text: 'GitHub: https://github.com/101shaan' },
           { type: 'output', text: '' }
         ]);
         break;
@@ -126,11 +170,11 @@ const TerminalOverlay: React.FC = () => {
         setOutput(prev => [...prev,
           { type: 'output', text: 'Technical Arsenal:' },
           { type: 'output', text: '=================' },
-          { type: 'output', text: 'Languages: TypeScript, Python, C++, C, Assembly' },
+          { type: 'output', text: 'Languages: TypeScript, Python, C++, C, Assembly, Rust' },
           { type: 'output', text: 'Frontend: React, Next.js, TailwindCSS' },
           { type: 'output', text: 'Backend: Node.js, PostgreSQL, Supabase' },
-          { type: 'output', text: 'Tools: Docker, Git, Linux, VS Code' },
-          { type: 'output', text: 'Currently exploring: Rust, WebAssembly, ML' },
+          { type: 'output', text: 'Tools: Docker, Git, Linux, QEMU, GDB, Valgrind' },
+          { type: 'output', text: 'Systems: OS Development, Memory Management, Low-level' },
           { type: 'output', text: '' }
         ]);
         break;
@@ -139,9 +183,9 @@ const TerminalOverlay: React.FC = () => {
         setOutput(prev => [...prev,
           { type: 'output', text: 'Contact Information:' },
           { type: 'output', text: '===================' },
-          { type: 'output', text: 'Email: your.email@example.com' },
-          { type: 'output', text: 'GitHub: github.com/yourusername' },
-          { type: 'output', text: 'LinkedIn: linkedin.com/in/yourusername' },
+          { type: 'output', text: 'Email: shaansisodia3@gmail.com' },
+          { type: 'output', text: 'GitHub: https://github.com/101shaan' },
+          { type: 'output', text: 'LinkedIn: linkedin.com/in/shaan-sisodia-2810962ab' },
           { type: 'output', text: '' },
           { type: 'output', text: 'Always open to interesting projects!' },
           { type: 'output', text: '' }
@@ -167,6 +211,7 @@ const TerminalOverlay: React.FC = () => {
         setOutput(prev => [...prev,
           { type: 'error', text: `Command not found: ${command}` },
           { type: 'output', text: 'Type "help" for available commands.' },
+          { type: 'output', text: 'Or try "hack" to boot into the retro OS! 🔥' },
           { type: 'output', text: '' }
         ]);
     }
@@ -251,16 +296,19 @@ const TerminalOverlay: React.FC = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="flex-1 bg-transparent text-gray-100 font-mono text-sm outline-none"
-                    placeholder="Type a command..."
+                    disabled={isBooting}
+                    className="flex-1 bg-transparent text-gray-100 font-mono text-sm outline-none disabled:opacity-50"
+                    placeholder={isBooting ? "Booting..." : "Type a command..."}
                   />
-                  <motion.span
-                    animate={{ opacity: [1, 0] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    className="text-cyan-400 font-mono"
-                  >
-                    |
-                  </motion.span>
+                  {!isBooting && (
+                    <motion.span
+                      animate={{ opacity: [1, 0] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                      className="text-cyan-400 font-mono"
+                    >
+                      |
+                    </motion.span>
+                  )}
                 </div>
               </div>
             </div>

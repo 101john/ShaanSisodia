@@ -22,7 +22,7 @@ const TechStack: React.FC = () => {
         { name: 'PostgreSQL', icon: 'https://cdn.simpleicons.org/postgresql', color: '#336791' },
         { name: 'Git', icon: 'https://cdn.simpleicons.org/git', color: '#F05032' },
         { name: 'GDB', icon: 'https://cdn.simpleicons.org/gnu', color: '#A42E2B' },
-        { name: 'Valgrind', icon: 'https://cdn.simpleicons.org/valgrind', color: '#FF6B35' },
+        { name: 'Valgrind', icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBzdHJva2U9IiNGRjZCMzUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+Cjwvc3ZnPgo=', color: '#FF6B35' },
         { name: 'QEMU', icon: 'https://cdn.simpleicons.org/qemu', color: '#FF6600' },
         { name: 'Vim', icon: 'https://cdn.simpleicons.org/vim', color: '#019733' },
       ]
@@ -125,47 +125,6 @@ const TechStack: React.FC = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Currently Exploring */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-20 text-center"
-        >
-          <h3 className="text-2xl font-bold text-gray-100 mb-8">Currently Exploring</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {[
-              { name: 'WebAssembly', color: '#654FF0' },
-              { name: 'Kubernetes', color: '#326CE5' },
-              { name: 'Machine Learning', color: '#FF6F00' },
-              { name: 'Embedded Systems', color: '#00C853' }
-            ].map((tech, index) => (
-              <motion.span
-                key={tech.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: false }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
-                whileHover={{ 
-                  scale: 1.1, 
-                  y: -5,
-                  transition: { duration: 0.2, ease: "easeOut" }
-                }}
-                className="px-6 py-3 rounded-full border transition-all duration-200 cursor-default will-change-transform"
-                style={{
-                  backgroundColor: `${tech.color}15`,
-                  borderColor: `${tech.color}30`,
-                  color: tech.color,
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                {tech.name}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );

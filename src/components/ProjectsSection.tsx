@@ -20,39 +20,43 @@ const ProjectsSection: React.FC = () => {
   const projects: Project[] = [
     {
       id: 'os',
-      title: 'Custom Operating System',
-      description: 'Built from scratch using C and Assembly',
-      longDescription: 'A complete operating system implementation featuring memory management, process scheduling, and basic I/O operations. Implements core OS concepts including virtual memory, interrupt handling, and system calls. Written entirely in C and Assembly for x86 architecture.',
-      tech: ['C', 'Assembly', 'Low-level programming', 'x86 Architecture'],
+      title: 'ShaanOS',
+      description: 'Custom x86 operating system kernel built from scratch',
+      longDescription: 'A complete x86 operating system implementation featuring memory management, process scheduling, interrupt handling, and basic I/O operations. Built entirely in C and Assembly with support for VGA text mode, keyboard input, ATA disk operations, and FAT12 file system. Includes a custom bootloader, physical/virtual memory managers, and a kernel shell for testing.',
+      tech: ['C', 'Assembly', 'x86 Architecture', 'Low-level Programming', 'QEMU'],
       image: 'https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg',
+      github: 'https://github.com/101shaan/ShaanOS',
       status: 'completed'
     },
     {
       id: 'civsim',
       title: 'CivSim - Civilization Simulator',
-      description: 'Real-time simulation with AI-generated lore',
-      longDescription: 'A complex civilization simulation featuring dynamic population growth, resource management, and diplomatic systems. Integrates OpenAI GPT for procedural lore generation and storytelling. Includes advanced algorithms for trade routes, cultural evolution, and technological progression.',
-      tech: ['Python', 'Pygame', 'NumPy', 'OpenAI API', 'AI Integration'],
+      description: 'Real-time civilization simulation with AI-generated lore',
+      longDescription: 'A sophisticated Python/Pygame civilization simulation modeling population growth, territorial expansion, warfare, and diplomacy. Features realistic demographic transitions, OpenAI GPT integration for dynamic lore generation, and detailed visualization of civilization interactions. Includes God Mode, variable simulation speeds, and rich UI for exploring civilization details.',
+      tech: ['Python', 'Pygame', 'NumPy', 'OpenAI API', 'AI Integration', 'Simulation'],
       image: 'https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg',
+      github: 'https://github.com/101shaan/CIVSIM',
       status: 'completed'
     },
     {
       id: 'dailyglitch',
       title: 'Daily Glitch',
-      description: 'Full-stack mystery story platform',
-      longDescription: 'A sophisticated web platform for interactive mystery stories with custom CMS capabilities. Features real-time story progression, user engagement tracking, and dynamic content delivery. Built with modern web technologies and deployed with full CI/CD pipeline.',
-      tech: ['React', 'Next.js', 'Supabase', 'TailwindCSS', 'TypeScript'],
+      description: 'Full-stack mystery story platform with modern web architecture',
+      longDescription: 'A sophisticated web platform delivering daily mysterious stories and unexplained phenomena. Built with React, Next.js, and Supabase, featuring a responsive dark theme, search functionality, archive system, and newsletter integration. Includes a CLI tool for content management and modern deployment pipeline.',
+      tech: ['React', 'Next.js', 'Supabase', 'TypeScript', 'TailwindCSS', 'PostgreSQL'],
       image: 'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg',
+      github: 'https://github.com/101shaan/DailyGlitch',
       live: 'https://dailyglitch.org',
       status: 'completed'
     },
     {
       id: 'ardenvale',
       title: 'Ardenvale RPG',
-      description: 'Text-based Dark Souls-inspired RPG',
-      longDescription: 'A complex text-based RPG featuring intricate combat mechanics, character progression, and rich ASCII art. Implements advanced game state management, save/load systems, and procedural content generation. Inspired by Dark Souls difficulty and atmosphere.',
-      tech: ['Python', 'Object-oriented Design', 'Game Logic', 'ASCII Art'],
+      description: 'Complex text-based Dark Souls-inspired RPG with deep mechanics',
+      longDescription: 'A sophisticated text-based fantasy RPG inspired by Dark Souls, featuring strategic turn-based combat, character progression, quest systems, and rich world exploration. Includes over 15 unique locations across 4 regions, beacon fast-travel system, NPC dialogue trees, inventory management, and save/load functionality. Built with modular Python architecture for expandability.',
+      tech: ['Python', 'Object-oriented Design', 'Game Logic', 'ASCII Art', 'Save Systems'],
       image: 'https://images.pexels.com/photos/158826/structure-light-led-movement-158826.jpeg',
+      github: 'https://github.com/101shaan/Arvendale',
       status: 'completed'
     }
   ];
