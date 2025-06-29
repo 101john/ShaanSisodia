@@ -27,8 +27,8 @@ const BackgroundCubes: React.FC = () => {
             const pct = 1 - dist / radius;
             const angle = pct * maxAngle;
             gsap.to(cube, {
-              duration: 0.4,
-              ease: "power3.out",
+              duration: 0.2, // Faster response
+              ease: "power2.out",
               overwrite: true,
               rotateX: -angle,
               rotateY: angle,
@@ -36,8 +36,8 @@ const BackgroundCubes: React.FC = () => {
             });
           } else {
             gsap.to(cube, {
-              duration: 0.8,
-              ease: "power3.out",
+              duration: 0.6,
+              ease: "power2.out",
               overwrite: true,
               rotateX: 0,
               rotateY: 0,
@@ -60,10 +60,8 @@ const BackgroundCubes: React.FC = () => {
       const colCenter = (e.clientX - rect.left) / cellW;
       const rowCenter = (e.clientY - rect.top) / cellH;
 
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() =>
-        tiltAt(rowCenter, colCenter)
-      );
+      // Immediate response - no RAF delay
+      tiltAt(rowCenter, colCenter);
 
       idleTimerRef.current = setTimeout(() => {
         userActiveRef.current = false;
@@ -80,7 +78,7 @@ const BackgroundCubes: React.FC = () => {
         rotateX: 0,
         rotateY: 0,
         rotateZ: 0,
-        ease: "power3.out",
+        ease: "power2.out",
       })
     );
   }, []);
@@ -110,23 +108,23 @@ const BackgroundCubes: React.FC = () => {
         .map(Number)
         .sort((a, b) => a - b)
         .forEach((ring) => {
-          const delay = ring * 0.08;
+          const delay = ring * 0.05; // Faster ripple
           const faces = rings[ring].flatMap((cube) =>
             Array.from(cube.querySelectorAll<HTMLElement>(".bg-cube-face"))
           );
 
-          // Very subtle ripple - dark color
+          // Very subtle dark ripple
           gsap.to(faces, {
-            backgroundColor: "rgba(6, 182, 212, 0.1)",
-            duration: 0.3,
+            backgroundColor: "rgba(6, 182, 212, 0.08)", // Much more subtle
+            duration: 0.2,
             delay,
-            ease: "power3.out",
+            ease: "power2.out",
           });
           gsap.to(faces, {
             backgroundColor: "rgba(15, 23, 42, 0.3)",
-            duration: 0.4,
-            delay: delay + 0.3 + 0.2,
-            ease: "power3.out",
+            duration: 0.3,
+            delay: delay + 0.2,
+            ease: "power2.out",
           });
         });
     },

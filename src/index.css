@@ -18,8 +18,8 @@ body {
   background-color: #030712;
   color: #f9fafb;
   overflow-x: hidden;
-  cursor: none;
   line-height: 1.6;
+  cursor: auto; /* Default cursor */
 }
 
 /* Custom scrollbar */
@@ -63,7 +63,7 @@ textarea:focus-visible {
 
 /* Interactive elements */
 .interactive {
-  cursor: none;
+  cursor: pointer;
 }
 
 /* Smooth transitions */
@@ -138,10 +138,6 @@ textarea:focus-visible {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  body {
-    cursor: auto;
-  }
-  
   .interactive {
     cursor: pointer;
   }
