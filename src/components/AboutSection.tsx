@@ -84,7 +84,7 @@ const AboutSection: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { title: 'Projects Built', value: '15+', color: 'cyan' },
-                { title: 'Languages', value: '8', color: 'purple' },
+                { title: 'Languages', value: '6', color: 'purple' },
                 { title: 'Years Coding', value: '3+', color: 'blue' },
                 { title: 'Systems Focus', value: '100%', color: 'green' },
               ].map((stat, index) => (
